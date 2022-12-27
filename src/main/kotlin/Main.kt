@@ -1,8 +1,4 @@
 import domain_layer.models.UtilParams
-import io.ktor.client.engine.cio.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import network_layer.FigmaClient
 import network_layer.repositories.FigmaRepository
