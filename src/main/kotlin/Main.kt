@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
     val repository = FigmaRepository(figmaClient)
 
     runBlocking {
-        repository.getNodes(params.fileHash)
+        println(repository.getStyles(params.fileHash))
     }
 
     figmaClient.clean()

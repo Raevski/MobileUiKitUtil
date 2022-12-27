@@ -11,31 +11,27 @@ import io.ktor.http.*
 class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
                   private val figmaToken: String = "") {
     private val client: HttpClient = HttpClient() {
-        //TODO: Should fix error SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-
-        /*install(Logging) {
+        install(Logging) {
             logger = Logger.DEFAULT
             level = LogLevel.HEADERS
             filter { request ->
                 request.url.host.contains("ktor.io")
             }
-        }*/
-        //expectSuccess = true
+        }
+        expectSuccess = true
     }
 
     private suspend fun makeRequest(pathSegments: List<String>): HttpResponse {
-        val response: HttpResponse = client.get {
+        val response: HttpResponse = client.get(baseUrl) {
             url {
-                protocol = URLProtocol.HTTPS
-                host = baseUrl
-                appendEncodedPathSegments(pathSegments)
                 headers {
                     append("X-Figma-Token", figmaToken)
                 }
+                appendEncodedPathSegments(pathSegments)
             }
         }
 
-        println(response.status)
+        println(response.request)
 
         return response
     }

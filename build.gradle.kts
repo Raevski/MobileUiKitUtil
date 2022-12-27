@@ -11,6 +11,7 @@ group = "com.yuryandroid"
 version = "1.0.1-SNAPSHOT"
 val ktor_version: String by project
 val coroutines_version: String by project
+val ktor_gson_version: String by project
 
 repositories {
     mavenCentral()
@@ -21,10 +22,11 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-json-jvm:$ktor_version")
-    implementation("io.ktor:ktor-client-gson:2.2.1")
+    implementation("io.ktor:ktor-client-gson:$ktor_gson_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
-
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+
+    implementation ("ch.qos.logback:logback-classic:1.2.9")
 
     testImplementation(kotlin("test"))
 }
