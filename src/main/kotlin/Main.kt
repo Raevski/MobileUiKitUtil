@@ -10,12 +10,12 @@ fun main(args: Array<String>) {
     println("Start of figma mobile util for developers")
     println("Program arguments: ${args.joinToString()}")
 
-    val figmaClient = FigmaClient(figmaToken = args[0])
+    val figmaClient = FigmaClient(figmaToken = args.getOrElse(0) { "" })
 
     val repository = FigmaRepository(figmaClient)
 
     runBlocking {
-        repository.getNodes(args[1])
+        repository.getNodes(args.getOrElse(1) { "" })
     }
 
     figmaClient.clean()
