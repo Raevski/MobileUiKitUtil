@@ -11,10 +11,10 @@ fun main(args: Array<String>) {
 
     val figmaClient = FigmaClient(figmaToken = params.figmaToken)
 
-    val repository = FigmaRepository(figmaClient)
+    val repository = FigmaRepository(figmaClient, params.isLogging)
 
     runBlocking {
-        println(repository.getStyles(params.fileHash))
+        repository.getStyles(params.fileHash)
     }
 
     figmaClient.clean()
