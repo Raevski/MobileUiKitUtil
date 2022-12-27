@@ -1,12 +1,15 @@
 package network_layer
 
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.client.utils.EmptyContent.headers
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
 class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
                   private val figmaToken: String = "") {
@@ -15,8 +18,15 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
             logger = Logger.DEFAULT
             level = LogLevel.HEADERS
             filter { request ->
-                request.url.host.contains("ktor.io")
+                request.url.host.contains(baseUrl)
             }
+        }
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+            })
         }
         expectSuccess = true
     }
