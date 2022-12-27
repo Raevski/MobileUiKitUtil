@@ -1,3 +1,4 @@
+import domain_layer.models.UtilParams
 import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -10,12 +11,14 @@ fun main(args: Array<String>) {
     println("Start of figma mobile util for developers")
     println("Program arguments: ${args.joinToString()}")
 
-    val figmaClient = FigmaClient(figmaToken = args.getOrElse(0) { "" })
+    val params = UtilParams.createParamsFromArgs(args)
+
+    val figmaClient = FigmaClient(figmaToken = params.figmaToken)
 
     val repository = FigmaRepository(figmaClient)
 
     runBlocking {
-        repository.getNodes(args.getOrElse(1) { "" })
+        repository.getNodes(params.fileHash)
     }
 
     figmaClient.clean()
