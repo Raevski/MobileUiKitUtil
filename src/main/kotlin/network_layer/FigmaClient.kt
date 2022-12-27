@@ -23,7 +23,7 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
         //expectSuccess = true
     }
 
-    suspend fun makeRequest(pathSegments: List<String>): HttpResponse {
+    private suspend fun makeRequest(pathSegments: List<String>): HttpResponse {
         val response: HttpResponse = client.get {
             url {
                 protocol = URLProtocol.HTTPS

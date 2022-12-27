@@ -3,7 +3,7 @@ package domain_layer.models
 import domain_layer.*
 
 data class UtilParams(val platform: Platform,
-                      val command: ExportCommand,
+                      val resourceType: ExportResourceType,
                       val figmaToken: String,
                       val fileHash: String) {
     companion object {
@@ -12,9 +12,9 @@ data class UtilParams(val platform: Platform,
             val fileHash = args.getOrElse(1) { "" }
 
             val platform = args.getOrElse(2) { "" }.getPlatform()
-            val command = args.getOrElse(3) { "" }.getExportCommand()
+            val resourceType = args.getOrElse(3) { "" }.getExportResourceType()
 
-            return UtilParams(platform, command, figmaToken, fileHash)
+            return UtilParams(platform, resourceType, figmaToken, fileHash)
         }
     }
 }
