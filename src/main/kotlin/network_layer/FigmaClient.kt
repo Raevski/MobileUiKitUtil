@@ -13,14 +13,14 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
     private val client: HttpClient = HttpClient() {
         //TODO: Should fix error SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 
-        install(Logging) {
+        /*install(Logging) {
             logger = Logger.DEFAULT
             level = LogLevel.HEADERS
             filter { request ->
                 request.url.host.contains("ktor.io")
             }
-        }
-        expectSuccess = true
+        }*/
+        //expectSuccess = true
     }
 
     suspend fun makeRequest(pathSegments: List<String>): HttpResponse {
@@ -40,16 +40,16 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
         return response
     }
 
-    suspend fun getNodes(fileId: Long): HttpResponse {
-        return makeRequest(listOf("files", "$fileId", "nodes"))
+    suspend fun getNodes(fileId: String): HttpResponse {
+        return makeRequest(listOf("files", fileId, "nodes"))
     }
 
-    suspend fun getStyles(fileId: Long): HttpResponse {
-        return makeRequest(listOf("files", "$fileId", "styles"))
+    suspend fun getStyles(fileId: String): HttpResponse {
+        return makeRequest(listOf("files", fileId, "styles"))
     }
 
-    suspend fun getComponents(fileId: Long): HttpResponse {
-        return makeRequest(listOf("files", "$fileId", "components"))
+    suspend fun getComponents(fileId: String): HttpResponse {
+        return makeRequest(listOf("files", fileId, "components"))
     }
 
     fun clean() {
