@@ -1,8 +1,6 @@
 package network_layer
 
 import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
@@ -31,7 +29,9 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
         expectSuccess = true
     }
 
-    private suspend fun makeRequest(pathSegments: List<String>): HttpResponse {
+    private suspend fun makeRequest(pathSegments: List<String>,
+                                    params: Map<String, List<String>> = hashMapOf()
+    ): HttpResponse {
         val response: HttpResponse = client.get(baseUrl) {
             url {
                 headers {
@@ -39,6 +39,7 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
                 }
                 appendEncodedPathSegments(pathSegments)
             }
+            parametersOf(params)
         }
 
         println(response.request)
@@ -46,8 +47,8 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
         return response
     }
 
-    suspend fun getNodes(fileId: String): HttpResponse {
-        return makeRequest(listOf("files", fileId, "nodes"))
+    suspend fun getNodes(fileId: String, ids: List<String>): HttpResponse {
+        return makeRequest(listOf("files", fileId, "nodes"), mapOf<String, List<String>>("ids" to ids))
     }
 
     suspend fun getStyles(fileId: String): HttpResponse {

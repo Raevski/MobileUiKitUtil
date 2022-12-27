@@ -12,8 +12,8 @@ class FigmaRepository(private val figmaClient: FigmaClient) {
         return response.bodyAsText()
     }
 
-    suspend fun getNodes(fileId: String): String {
-        val response = figmaClient.getNodes(fileId)
+    suspend fun getNodes(fileId: String, ids: List<String>): String {
+        val response = figmaClient.getNodes(fileId, ids)
 
         return response.bodyAsText()
     }
