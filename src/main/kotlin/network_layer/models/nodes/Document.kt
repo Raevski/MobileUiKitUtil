@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Document(val id: String,
-    val name: String,
-    val fills: List<Paint>,
-    val style: TypeStyle? = null)
+                    val name: String,
+                    val fills: List<Paint>,
+                     val style: TypeStyle? = null)

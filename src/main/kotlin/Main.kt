@@ -1,4 +1,5 @@
 import domain_layer.models.UtilParams
+import domain_layer.usecases.LoadTypographyUseCase
 import kotlinx.coroutines.runBlocking
 import network_layer.FigmaClient
 import network_layer.repositories.FigmaRepository
@@ -10,16 +11,10 @@ fun main(args: Array<String>) {
     val params = UtilParams.createParamsFromArgs(args)
 
     val figmaClient = FigmaClient(figmaToken = params.figmaToken)
-
     val repository = FigmaRepository(figmaClient, params.isLogging)
 
-    runBlocking {
-        val body = repository.getStyles(params.fileHash)
-
-        val nodeIds = body.meta.styles.map { it.nodeId }
-
-        val nodesResponse = repository.getNodes(params.fileHash, nodeIds)
-    }
+    val loadTypographyUseCase = LoadTypographyUseCase(repository, params.fileHash)
+    loadTypographyUseCase.execute()
 
     figmaClient.clean()
 }
