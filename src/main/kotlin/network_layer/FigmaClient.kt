@@ -38,8 +38,10 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
                     append("X-Figma-Token", figmaToken)
                 }
                 appendEncodedPathSegments(pathSegments)
+                params.forEach {
+                    parameters.append(it.key, it.value.joinToString(separator = ","))
+                }
             }
-            parametersOf(params)
         }
 
         println(response.request)

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Paint(val type: PaintType,
-                 val opacity: Double?,
+                 val opacity: Double? = null,
                  val color: PaintColor?)

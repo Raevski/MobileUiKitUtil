@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TypeStyle(
     val fontFamily: String = "",
-    val fontPostScriptName: String = "",
+    val fontPostScriptName: String? = null,
     val fontWeight: Double,
     val fontSize: Double,
     val lineHeightPx: Double,
     val letterSpacing: Double,
     val lineHeightUnit: LineHeightUnit,
-    val textCase: TextCase
+    val textCase: TextCase? = null
 )

@@ -14,7 +14,11 @@ fun main(args: Array<String>) {
     val repository = FigmaRepository(figmaClient, params.isLogging)
 
     runBlocking {
-        repository.getStyles(params.fileHash)
+        val body = repository.getStyles(params.fileHash)
+
+        val nodeIds = body.meta.styles.map { it.nodeId }
+
+        val nodesResponse = repository.getNodes(params.fileHash, nodeIds)
     }
 
     figmaClient.clean()
