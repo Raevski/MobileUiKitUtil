@@ -2,7 +2,11 @@ package domain_layer.usecases
 
 import domain_layer.models.TextStyle
 import kotlinx.coroutines.runBlocking
+import network_layer.models.nodes.LineHeightUnit
 import network_layer.models.nodes.NodesResponse
+import network_layer.models.nodes.TextCase
+import network_layer.models.nodes.TypeStyle
+import network_layer.models.styles.FigmaStylesResponse
 import network_layer.repositories.FigmaRepository
 
 class LoadTypographyUseCase(private val figmaRepository: FigmaRepository,
@@ -10,17 +14,41 @@ class LoadTypographyUseCase(private val figmaRepository: FigmaRepository,
     fun execute(): List<TextStyle> {
         println("Start loading typography from file $fileId")
 
-        val nodesResponse: NodesResponse
+        val nodesResponseBody: NodesResponse
+        val stylesResponseBody: FigmaStylesResponse
+
         runBlocking {
-            val body = figmaRepository.getStyles(fileId)
+            stylesResponseBody = figmaRepository.getStyles(fileId)
 
-            val nodeIds = body.meta.styles.map { it.nodeId }
+            val nodeIds = stylesResponseBody.meta.styles.map { it.nodeId }
 
-            nodesResponse = figmaRepository.getNodes(fileId, nodeIds)
+            nodesResponseBody = figmaRepository.getNodes(fileId, nodeIds)
         }
 
         println("Typography was successfully exported from file $fileId")
 
-        return nodesResponse.nodes.map { TextStyle() }
+        val resultStyles = stylesResponseBody.meta.styles.map { style ->
+            val node = nodesResponseBody.nodes.get(style.nodeId)
+            val textStyle: TypeStyle? = node?.document?.style
+
+            val lineHeight: Double? = if (textStyle?.lineHeightUnit == LineHeightUnit.INTRINSIC) { null } else {
+                textStyle?.lineHeightPx
+            }
+
+            val textCase = textStyle?.textCase ?: TextCase.ORIGINAL
+
+            TextStyle(
+                name = style.name,
+                fontName = textStyle?.fontPostScriptName ?: textStyle?.fontFamily ?: "",
+                fontSize = textStyle?.fontSize ?: .0,
+                lineHeight = lineHeight ?: .0,
+                letterSpacing = textStyle?.letterSpacing ?: .0,
+                textCase = textCase
+            )
+        }
+
+        println("Typography style list is $resultStyles")
+
+        return resultStyles
     }
 }
