@@ -10,8 +10,8 @@ import network_layer.models.styles.FigmaStylesResponse
 import network_layer.repositories.FigmaRepository
 
 class LoadTypographyUseCase(private val figmaRepository: FigmaRepository,
-                            private val fileId: String) : MobileUtilUseCase<Nothing, List<TextStyle>>{
-    override fun execute(params: Nothing): List<TextStyle> {
+                            private val fileId: String) : MobileUtilUseCase<Nothing?, List<TextStyle>>{
+    override fun execute(params: Nothing?): List<TextStyle> {
         println("Start loading typography from file $fileId")
 
         val nodesResponseBody: NodesResponse

@@ -1,4 +1,5 @@
 import domain_layer.models.UtilParams
+import domain_layer.usecases.GenerateComposeTypographyUseCase
 import domain_layer.usecases.LoadTypographyUseCase
 import kotlinx.coroutines.runBlocking
 import network_layer.FigmaClient
@@ -14,7 +15,10 @@ fun main(args: Array<String>) {
     val repository = FigmaRepository(figmaClient, params.isLogging)
 
     val loadTypographyUseCase = LoadTypographyUseCase(repository, params.fileHash)
-    loadTypographyUseCase.execute()
+    loadTypographyUseCase.execute(null)
+
+    val generateComposeTypographyUseCase = GenerateComposeTypographyUseCase()
+    generateComposeTypographyUseCase.execute(GenerateComposeTypographyUseCase.Params())
 
     figmaClient.clean()
 }
