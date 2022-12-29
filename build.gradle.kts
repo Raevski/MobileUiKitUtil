@@ -12,6 +12,8 @@ version = "1.0.1-SNAPSHOT"
 val ktor_version: String by project
 val coroutines_version: String by project
 val ktor_gson_version: String by project
+val kotlin_poet_version: String by project
+val logback_version: String by project
 
 repositories {
     mavenCentral()
@@ -28,7 +30,8 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
 
-    implementation ("ch.qos.logback:logback-classic:1.2.9")
+    implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("com.squareup:kotlinpoet:$kotlin_poet_version")
 
     testImplementation(kotlin("test"))
 }
