@@ -3,6 +3,7 @@ package domain_layer.usecases.android
 import com.squareup.kotlinpoet.*
 import domain_layer.models.TextStyle
 import domain_layer.usecases.MobileUtilUseCase
+import java.io.File
 
 class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypographyUseCase.Params, Unit> {
     companion object {
@@ -13,7 +14,7 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
     override fun execute(params: Params) {
         val immutableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME, "Immutable")
 
-        val file = FileSpec.builder("params.packageName", params.className)
+        val file = FileSpec.builder(params.packageName, params.className)
             .addType(
                 addPropertiesForStyles(
                     TypeSpec.classBuilder(params.className)
@@ -22,7 +23,7 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
             )
             .build()
 
-        file.writeTo(System.out)
+        file.writeTo(params.file)
     }
 
     private fun addPropertiesForStyles(
@@ -78,7 +79,8 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
 
     data class Params(val packageName: String = "com.example.hello",
                       val className: String = "Typography",
-                      val styles: List<TextStyle> = listOf()
+                      val styles: List<TextStyle> = listOf(),
+                      val file: File
     )
 
 }

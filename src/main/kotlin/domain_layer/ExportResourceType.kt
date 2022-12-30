@@ -1,9 +1,9 @@
 package domain_layer
 
 enum class ExportResourceType(val resourceTypeString: String) {
-    TYPOGRAPHY("typography"),
-    COLORS("colors"),
-    ICONS("icons")
+    TYPOGRAPHY("Typography"),
+    COLORS("Colors"),
+    ICONS("Icons")
 }
 
 fun String.getExportResourceType(): ExportResourceType {

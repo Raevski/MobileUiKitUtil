@@ -1,4 +1,5 @@
 import domain_layer.models.UtilParams
+import domain_layer.usecases.CreateFileUseCase
 import domain_layer.usecases.android.GenerateComposeTypographyUseCase
 import domain_layer.usecases.LoadTypographyUseCase
 import domain_layer.usecases.android.LoadAndGenerateComposeStyles
@@ -14,8 +15,12 @@ fun main(args: Array<String>) {
     val figmaClient = FigmaClient(figmaToken = params.figmaToken)
     val repository = FigmaRepository(figmaClient, params.isLogging)
 
+    val createFileUseCase = CreateFileUseCase()
+    val file = createFileUseCase.execute(CreateFileUseCase.Params(params.resultPath,
+        "${params.resourceType.resourceTypeString}.kt"))
+
     val loadAndGenerateComposeStyles = LoadAndGenerateComposeStyles(repository)
-    loadAndGenerateComposeStyles.execute(LoadAndGenerateComposeStyles.Params(params.fileHash))
+    loadAndGenerateComposeStyles.execute(LoadAndGenerateComposeStyles.Params(params.fileHash, file))
 
     figmaClient.clean()
 }

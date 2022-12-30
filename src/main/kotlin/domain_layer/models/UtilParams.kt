@@ -7,7 +7,8 @@ data class UtilParams(
     val resourceType: ExportResourceType,
     val figmaToken: String,
     val fileHash: String,
-    val isLogging: Boolean
+    val isLogging: Boolean,
+    val resultPath: String
 ) {
     companion object {
         fun createParamsFromArgs(args: Array<String>): UtilParams {
@@ -17,6 +18,7 @@ data class UtilParams(
             val platform = args.getOrElse(2) { "" }.getPlatform()
             val resourceType = args.getOrElse(3) { "" }.getExportResourceType()
             val isLoggingParam = args.get(4).orEmpty()
+            val filePath = args.get(5).orEmpty()
 
             var isLogging = false
 
@@ -26,7 +28,7 @@ data class UtilParams(
                 isLogging = isLoggingParam.toBoolean()
             }
 
-            return UtilParams(platform, resourceType, figmaToken, fileHash, isLogging)
+            return UtilParams(platform, resourceType, figmaToken, fileHash, isLogging, filePath)
         }
     }
 }
