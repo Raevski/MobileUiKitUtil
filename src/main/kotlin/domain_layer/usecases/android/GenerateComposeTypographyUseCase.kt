@@ -39,16 +39,16 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
             augmentedClassBuilder = classBuilder.addProperty(
                 PropertySpec.builder(
                     style.name,
-                    WildcardTypeName.producerOf(composeTextStyleClass)
+                    composeTextStyleClass
                 )
                     .getter(
                         FunSpec.getterBuilder()
-                            .addStatement("return %S", "TextStyle(\n" +
-                                    "            fontFamily = FontFamily.Default,\n" +
-                                    "            color = Colors.colorLightTextPrimary(),\n" +
-                                    "            fontWeight = ${getFontWeightString(style.fontWeight)},\n" +
-                                    "            fontSize = ${style.fontSize.toInt()}.sp,\n" +
-                                    "            lineHeight = ${style.lineHeight.toInt()}.sp)")
+                            .beginControlFlow("TextStyle(\n" +
+                                    "   fontFamily = FontFamily.Default,\n" +
+                                    "   fontWeight = ${getFontWeightString(style.fontWeight)},\n" +
+                                    "   fontSize = ${style.fontSize.toInt()}.sp,\n" +
+                                    "   lineHeight = ${style.lineHeight.toInt()}.sp)")
+                            .endControlFlow()
                             .addAnnotation(composableAnnotationClass)
                             .build()
                     )
