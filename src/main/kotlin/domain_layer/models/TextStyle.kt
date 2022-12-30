@@ -6,8 +6,9 @@ data class TextStyle(
     val name: String = "",
     val fontName: String = "",
     val fontSize: Double = .0,
-    //val fontStyle: String = "",
+    val fontStyle: String = "",
     val lineHeight: Double = .0,
     val letterSpacing: Double = .0,
-    val textCase: TextCase = TextCase.ORIGINAL
+    val textCase: TextCase = TextCase.ORIGINAL,
+    val fontWeight: Double = 500.0
 )

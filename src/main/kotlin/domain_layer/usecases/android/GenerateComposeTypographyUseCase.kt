@@ -43,7 +43,12 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
                 )
                     .getter(
                         FunSpec.getterBuilder()
-                            .addStatement("return %S", "foo")
+                            .addStatement("return %S", "TextStyle(\n" +
+                                    "            fontFamily = FontFamily.Default,\n" +
+                                    "            color = Colors.colorLightTextPrimary(),\n" +
+                                    "            fontWeight = ${getFontWeightString(style.fontWeight)},\n" +
+                                    "            fontSize = ${style.fontSize.toInt()}.sp,\n" +
+                                    "            lineHeight = ${style.lineHeight.toInt()}.sp)")
                             .addAnnotation(composableAnnotationClass)
                             .build()
                     )
@@ -52,6 +57,23 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
         }
 
         return augmentedClassBuilder
+    }
+
+    private fun getFontWeightString(fontWeight: Double) : String {
+        return when(fontWeight) {
+            700.0 ->
+                "FontWeight.Bold"
+            600.0 ->
+                "FontWeight.SemiBold"
+            500.0 ->
+                "FontWeight.Medium"
+            400.0 ->
+                "FontWeight.Normal"
+            300.0 ->
+                "FontWeight.Light"
+
+            else -> "FontWeight.Normal"
+        }
     }
 
     data class Params(val packageName: String = "com.example.hello",

@@ -43,7 +43,8 @@ class LoadTypographyUseCase(private val figmaRepository: FigmaRepository,
                 fontSize = textStyle?.fontSize ?: .0,
                 lineHeight = lineHeight ?: .0,
                 letterSpacing = textStyle?.letterSpacing ?: .0,
-                textCase = textCase
+                textCase = textCase,
+                fontWeight = textStyle?.fontWeight ?: .0
             )
         }
 
