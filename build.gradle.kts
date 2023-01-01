@@ -33,6 +33,12 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("com.squareup:kotlinpoet:$kotlin_poet_version")
 
+    implementation("org.jetbrains.kotlin:kotlin-scripting-common")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
+
+
     testImplementation(kotlin("test"))
 }
 

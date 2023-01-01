@@ -1,3 +1,4 @@
+import config_dsl.Utils
 import domain_layer.models.UtilParams
 import domain_layer.usecases.CreateFileUseCase
 import domain_layer.usecases.android.GenerateComposeTypographyUseCase
@@ -5,6 +6,7 @@ import domain_layer.usecases.LoadTypographyUseCase
 import domain_layer.usecases.android.LoadAndGenerateComposeStyles
 import network_layer.FigmaClient
 import network_layer.repositories.FigmaRepository
+import java.io.File
 
 fun main(args: Array<String>) {
     println("Start of figma mobile util for developers")
@@ -23,4 +25,8 @@ fun main(args: Array<String>) {
     loadAndGenerateComposeStyles.execute(LoadAndGenerateComposeStyles.Params(params.fileHash, file))
 
     figmaClient.clean()
+
+    val scriptFile = File(args[6])
+    println("Executing script $scriptFile")
+    val res = Utils.evalFile(scriptFile)
 }
