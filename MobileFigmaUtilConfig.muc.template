@@ -1,6 +1,6 @@
 MobileFigmaExportConfig {
     figmaToken = "here should be your token"
-    fileHash = "qv6AA3YDQ76DSDFfDT7ZHb"
+    fileHash = "here should be your figma layout file hash"
     platform = "android"
     resourceType = "Typography"
     isLogging = true
