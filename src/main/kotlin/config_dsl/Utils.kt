@@ -19,7 +19,7 @@ object Utils {
 
 @KotlinScript(
     // File extension for the script type
-    fileExtension = ".kts",
+    fileExtension = ".muc",
     // Compilation configuration for the script type
     compilationConfiguration = ParseConfigScriptConfiguration::class
 )
@@ -27,32 +27,10 @@ abstract class ParseConfigScript
 
 object ParseConfigScriptConfiguration: ScriptCompilationConfiguration(
     {
-        // Implicit imports for all scripts of this type
-        defaultImports(DependsOn::class, Config::class)
+        defaultImports(DependsOn::class, MobileFigmaExportConfig::class)
         defaultImports(DependsOn::class, Tokenization::class)
         jvm {
-            // Extract the whole classpath from context classloader and use it as dependencies
             dependenciesFromCurrentContext(wholeClasspath = true)
         }
-        /*// Callbacks
-        refineConfiguration {
-            // Process specified annotations with the provided handler
-            onAnnotations(DependsOn::class, Config::class, handler = ::configureMavenDepsOnAnnotations)
-        }*/
     }
 )
-
-/*
-fun configureMavenDepsOnAnnotations(context: ScriptConfigurationRefinementContext): ResultWithDiagnostics<ParseConfigScriptConfiguration> {
-    val annotations = context.collectedData?.get(ScriptCollectedData.collectedAnnotations)?.takeIf { it.isNotEmpty() }
-        ?: return context.compilationConfiguration.asSuccess()
-    return runBlocking {
-        resolver.resolveFromScriptSourceAnnotations(annotations)
-    }.onSuccess {
-        context.compilationConfiguration.with {
-            dependencies.append(JvmDependency(it))
-        }.asSuccess()
-    }
-}
-
-private val resolver = CompoundDependenciesResolver(FileSystemDependenciesResolver(), MavenDependenciesResolver())*/

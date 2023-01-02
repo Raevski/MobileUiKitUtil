@@ -1,7 +1,5 @@
 package domain_layer.models
 
-import domain_layer.*
-
 data class UtilParams(
     val platform: Platform,
     val resourceType: ExportResourceType,
@@ -11,6 +9,9 @@ data class UtilParams(
     val resultPath: String
 ) {
     companion object {
+
+        //This function can be used to fast executing with new params from source code
+        //For common usages just use ParseConfigUseCase to build params
         fun createParamsFromArgs(args: Array<String>): UtilParams {
             val figmaToken = args.getOrElse(0) { "" }
             val fileHash = args.getOrElse(1) { "" }

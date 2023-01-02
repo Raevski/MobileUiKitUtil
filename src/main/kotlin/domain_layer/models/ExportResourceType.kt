@@ -1,4 +1,4 @@
-package domain_layer
+package domain_layer.models
 
 enum class ExportResourceType(val resourceTypeString: String) {
     TYPOGRAPHY("Typography"),
