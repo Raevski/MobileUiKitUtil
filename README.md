@@ -28,8 +28,8 @@ command line tool.
 - [ ] Generating Android Xml colors file for Android Project
 - [ ] Generating Android icons files for Android Project
 - [ ] Generating IOS typography file for XCode Project
-- [ ] Generating IOS colors file for Android Project
-- [ ] Generating IOS icons files for Android Project
+- [ ] Generating IOS colors file for XCode Project
+- [ ] Generating IOS icons files for XCode Project
 - [ ] Support for tokenization for styles, colors, icons names
 
 ## Config
