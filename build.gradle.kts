@@ -9,6 +9,7 @@ plugins {
 
 group = "com.yuryandroid"
 version = "1.0.1-SNAPSHOT"
+
 val ktor_version: String by project
 val coroutines_version: String by project
 val ktor_gson_version: String by project
@@ -34,11 +35,15 @@ dependencies {
     implementation("com.squareup:kotlinpoet:$kotlin_poet_version")
 
     implementation("org.jetbrains.kotlin:kotlin-scripting-common")
+    implementation("org.jetbrains.kotlin:kotlin-compiler")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-compiler")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.61")
-    implementation("org.jetbrains.kotlin:kotlin-scripting-jsr223:1.6.21")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jsr223")
+    
     testImplementation(kotlin("test"))
 }
 
@@ -52,6 +57,7 @@ tasks.withType<KotlinCompile> {
 
 application {
     mainClass.set("MainKt")
+    applicationDefaultJvmArgs = listOf("-Dkotlin.environment.keepalive=true")
 }
 
 tasks.jar {
