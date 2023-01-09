@@ -24,6 +24,8 @@ jobs:
             - Add jetpack compose typography exporting
           draft: false
           prerelease: false
+      - name: Build artifact
+        with:
           run: ./gradlew :jar
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
