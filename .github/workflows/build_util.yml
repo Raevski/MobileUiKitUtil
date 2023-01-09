@@ -12,8 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Build artifact
-        with:
-          run: ./gradlew :jar
+        run: ./gradlew :jar
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
