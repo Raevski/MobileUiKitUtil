@@ -31,3 +31,4 @@ jobs:
             - Add jetpack compose typography exporting
           draft: false
           prerelease: false
+          artifacts: "build/libs/MobileUIKitUtil-1.0.1-SNAPSHOT.jar"
