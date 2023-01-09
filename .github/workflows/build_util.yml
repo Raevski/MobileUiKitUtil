@@ -11,24 +11,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - Add jetpack compose typography exporting
-          draft: false
-          prerelease: false
       - name: Build artifact
-        with:
-          run: ./gradlew :jar
+        run: ./gradlew :jar
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
           name: mobile-util-jar
-          path: build
+          path: build/libs
