@@ -24,3 +24,9 @@ jobs:
             - Add jetpack compose typography exporting
           draft: false
           prerelease: false
+          run: ./gradlew :jar
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: mobile-util-jar
+          path: build
