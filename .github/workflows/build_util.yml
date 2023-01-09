@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is building jar for the library
 on:
   push:
     branches:
-      - release
+      - 'release/**'
 jobs:
   build:
     name: Create Release
