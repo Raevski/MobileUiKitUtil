@@ -1,0 +1,26 @@
+name: build-util-artifacts
+run-name: ${{ github.actor }} is building jar for the library
+on:
+  push:
+    branches:
+      - release
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - Add jetpack compose typography exporting
+          draft: false
+          prerelease: false
