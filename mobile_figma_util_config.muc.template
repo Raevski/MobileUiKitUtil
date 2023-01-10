@@ -6,6 +6,6 @@ MobileFigmaExportConfig {
     isLogging = true
     resultPath = "src/main/res"
     tokenization {
-        "body_3" to "bodyMain"
+        "headline" to "Headline"
     }
 }

@@ -12,7 +12,6 @@ class MobileFigmaExportConfig {
     var fileHash: String = ""
     var isLogging: Boolean = true
     var resultPath: String = ""
-    var tokens: Tokenization? = null
     val tokenizationBuilder = TokenizationBuilder()
 
     val targetPlatform: Platform
@@ -23,6 +22,7 @@ class MobileFigmaExportConfig {
 
     fun tokenization(init: TokenizationBuilder.() -> Unit) {
         tokenizationBuilder.init()
+        tokenizationBuilder.build()
     }
 
     constructor(figmaToken: String = "",
@@ -30,15 +30,13 @@ class MobileFigmaExportConfig {
                 resourceType: ExportResourceType = ExportResourceType.TYPOGRAPHY,
                 fileHash: String = "",
                 isLogging: Boolean = true,
-                resultPath: String = "",
-                tokens: Tokenization? = null) {
+                resultPath: String = "") {
         this.figmaToken = figmaToken
         this.platform = platform.platformString
         this.resourceType = resourceType.resourceTypeString
         this.fileHash = fileHash
         this.isLogging = isLogging
         this.resultPath = resultPath
-        this.tokens = tokens
     }
 
     constructor(initializer: MobileFigmaExportConfig.() -> Unit) {

@@ -1,6 +1,17 @@
 package config_dsl
 
-data class Tokenization(val specific: Map<String, String>, val default: String)
+object Tokenization {
+    var specific: Map<String, String> = mapOf()
+    var default: String = ""
+}
+
+fun String.replacedByToken(): String {
+    if (Tokenization.specific.containsKey(this)) {
+        return Tokenization.specific[this]!!
+    }
+
+    return this
+}
 
 class TokenizationBuilder {
     var default = ""
@@ -10,5 +21,8 @@ class TokenizationBuilder {
         specific[target] = this
     }
 
-    fun build(): Tokenization { return Tokenization(specific, default) }
+    fun build(): Tokenization {
+        Tokenization.specific = this.specific
+        return Tokenization
+    }
 }

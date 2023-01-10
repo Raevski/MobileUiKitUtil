@@ -6,7 +6,7 @@ import androidx.compose.ui.text.TextStyle
 
 @Immutable
 public class Typography {
-  public val Headline: TextStyle
+  public val headline: TextStyle
     @Composable
     get() {
       TextStyle(

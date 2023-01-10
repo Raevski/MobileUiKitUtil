@@ -1,6 +1,8 @@
 package domain_layer.usecases.android
 
 import com.squareup.kotlinpoet.*
+import config_dsl.Tokenization
+import config_dsl.replacedByToken
 import domain_layer.models.TextStyle
 import domain_layer.usecases.MobileUtilUseCase
 import java.io.File
@@ -39,7 +41,7 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
         styles.forEach { style ->
             augmentedClassBuilder = classBuilder.addProperty(
                 PropertySpec.builder(
-                    style.name,
+                    style.name.replacedByToken(),
                     composeTextStyleClass
                 )
                     .getter(
