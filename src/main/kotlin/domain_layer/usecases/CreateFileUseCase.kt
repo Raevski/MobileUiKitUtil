@@ -10,7 +10,7 @@ class CreateFileUseCase: MobileUtilUseCase<CreateFileUseCase.Params, File> {
                       val fromScratch: Boolean = true)
 
     override fun execute(params: Params): File {
-        val fileName = "./${params.path}/}"
+        val fileName = "./${params.path}"
 
         println("File path is ${fileName}")
 
