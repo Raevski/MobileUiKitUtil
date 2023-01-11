@@ -11,4 +11,13 @@ data class FigmaStyleData(val key: String,
                           val nodeId: String,
                           @SerialName("style_type")
                           val styleType: FigmaStyleType,
-                          val name: String)
+                          val description: String,
+                          val name: String) {
+    fun useStyle(): Boolean {
+        if (description.isEmpty()) {
+            return true
+        }
+
+        return !description.contains("none")
+    }
+}
