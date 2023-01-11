@@ -12,8 +12,14 @@ class CreateFileUseCase: MobileUtilUseCase<CreateFileUseCase.Params, File> {
     override fun execute(params: Params): File {
         val fileName = "./${params.path}"
 
-        println("File path is ${fileName}")
+        println("File path is $fileName")
 
-        return Files.createDirectory(Paths.get(fileName)).toFile()
+        val directory = File(fileName)
+
+        return if (directory.isDirectory) {
+            directory
+        } else {
+            Files.createDirectory(Paths.get(fileName)).toFile()
+        }
     }
 }
