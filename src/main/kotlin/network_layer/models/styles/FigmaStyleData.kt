@@ -10,5 +10,5 @@ data class FigmaStyleData(val key: String,
                           @SerialName("node_id")
                           val nodeId: String,
                           @SerialName("style_type")
-                          val styleType: String,
+                          val styleType: FigmaStyleType,
                           val name: String)

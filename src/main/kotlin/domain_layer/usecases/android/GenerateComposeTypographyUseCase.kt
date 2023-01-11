@@ -11,7 +11,6 @@ class GenerateComposeTypographyUseCase : MobileUtilUseCase<GenerateComposeTypogr
     companion object {
         const val COMPOSE_STYLE_CLASS_PACKAGE_NAME = "androidx.compose.ui.text"
         const val ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME = "androidx.compose.runtime"
-
     }
     override fun execute(params: Params) {
         val immutableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME, "Immutable")
