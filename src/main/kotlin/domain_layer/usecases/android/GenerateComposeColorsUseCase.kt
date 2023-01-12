@@ -96,15 +96,7 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
         colors.forEach { color ->
             val element = document.createElement("color")
             element.setAttribute("name", color.nameForResource)
-            val redHex = "%02x".format((color.red * 255).roundToInt())
-            val greenHex = "%02x".format((color.green * 255).roundToInt())
-            val blueHex = "%02x".format((color.blue * 255).roundToInt())
-            val alphaHex = "%02x".format((color.alpha * 255).roundToInt())
-            if (color.alpha > 0) {
-                element.appendChild(document.createTextNode("#${alphaHex}${redHex}${greenHex}${blueHex}".uppercase()))
-            } else {
-                element.appendChild(document.createTextNode("#${redHex}${greenHex}${blueHex}".uppercase()))
-            }
+            element.appendChild(document.createTextNode(color.inHex()))
             rootElement.appendChild(element)
         }
 

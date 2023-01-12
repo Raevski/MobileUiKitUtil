@@ -43,8 +43,17 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jsr223")
-    
-    testImplementation(kotlin("test"))
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+}
+
+sourceSets {
+    test {
+        kotlin {
+            srcDir("src/test/kotlin")
+        }
+    }
 }
 
 tasks.test {
