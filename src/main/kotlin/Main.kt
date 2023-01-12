@@ -1,5 +1,8 @@
+import domain_layer.models.ExportResourceType
 import domain_layer.usecases.CreateFileUseCase
+import domain_layer.usecases.LoadColorsUseCase
 import domain_layer.usecases.ParseConfigUseCase
+import domain_layer.usecases.android.LoadAndGenerateComposeColors
 import domain_layer.usecases.android.LoadAndGenerateComposeStyles
 import network_layer.FigmaClient
 import network_layer.repositories.FigmaRepository
@@ -28,8 +31,21 @@ fun main(args: Array<String>) {
         )
     )
 
-    val loadAndGenerateComposeStyles = LoadAndGenerateComposeStyles(repository)
-    loadAndGenerateComposeStyles.execute(LoadAndGenerateComposeStyles.Params(params.fileHash, file))
+    when(params.resourceType) {
+        ExportResourceType.TYPOGRAPHY -> {
+            val loadAndGenerateComposeStyles = LoadAndGenerateComposeStyles(repository)
+            loadAndGenerateComposeStyles.execute(LoadAndGenerateComposeStyles.Params(params.fileHash, file))
+        }
+
+        ExportResourceType.COLORS -> {
+            val loadAndGenerateComposeColors = LoadAndGenerateComposeColors(repository)
+            loadAndGenerateComposeColors.execute(LoadAndGenerateComposeColors.Params(params.fileHash, file))
+        }
+
+        ExportResourceType.ICONS -> {
+
+        }
+    }
 
     figmaClient.clean()
 
