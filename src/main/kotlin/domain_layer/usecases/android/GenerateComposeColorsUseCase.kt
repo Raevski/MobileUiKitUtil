@@ -2,6 +2,7 @@ package domain_layer.usecases.android
 
 import domain_layer.models.Color
 import domain_layer.usecases.MobileUtilUseCase
+import org.w3c.dom.Element
 import java.io.File
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.transform.OutputKeys
@@ -33,7 +34,7 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
         val rootElement = document.createElement("resources")
         document.appendChild(rootElement)
 
-        colors.forEach {color ->
+        colors.forEach { color ->
             val em = document.createElement("color")
             em.setAttribute("name", color.name)
             em.appendChild(document.createTextNode("#000000"))
@@ -42,8 +43,8 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
 
         val transformerFactory = TransformerFactory.newInstance()
         val transformer = transformerFactory.newTransformer()
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes")
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
 
         val source = DOMSource(document)
         val result = StreamResult("colors.xml")

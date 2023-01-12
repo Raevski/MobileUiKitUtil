@@ -1,7 +1,6 @@
 package domain_layer.usecases.android
 
 import domain_layer.usecases.LoadColorsUseCase
-import domain_layer.usecases.LoadTypographyUseCase
 import domain_layer.usecases.MobileUtilUseCase
 import network_layer.repositories.FigmaRepository
 import java.io.File

@@ -42,9 +42,7 @@ fun main(args: Array<String>) {
             loadAndGenerateComposeColors.execute(LoadAndGenerateComposeColors.Params(params.fileHash, file))
         }
 
-        ExportResourceType.ICONS -> {
-
-        }
+        ExportResourceType.ICONS -> {}
     }
 
     figmaClient.clean()
