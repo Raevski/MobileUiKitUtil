@@ -9,11 +9,12 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 import kotlin.math.roundToInt
+import com.squareup.kotlinpoet.*
 
 class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCase.Params, Unit> {
 
     companion object {
-        const val COMPOSE_STYLE_CLASS_PACKAGE_NAME = "androidx.compose.ui.text"
+        const val COMPOSE_COLOR_CLASS_PACKAGE_NAME = "androidx.compose.ui.text"
         const val ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME = "androidx.compose.runtime"
     }
 
@@ -22,11 +23,70 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
                       val colors: List<Color> = listOf(),
                       val file: File)
 
+    private val composeTextStyleClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
+        "Color")
+    private val composableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
+        "Composable")
+    private val composableImmutableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
+        "ReadOnlyComposable")
+
     override fun execute(params: Params) {
         createXmlForColors(params.colors)
+        createComposeClasses(params)
     }
 
-    private fun createXmlForColors(colors: List<Color>) {
+    private fun createComposeClasses(params: Params) {
+        val immutableAnnotationClass = ClassName(GenerateComposeTypographyUseCase.ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
+            "Immutable")
+
+        val builder = FileSpec.builder(params.packageName, params.className)
+            .addType(
+                addPropertiesForColors(
+                    TypeSpec.objectBuilder(params.className)
+                        .addAnnotation(immutableAnnotationClass), params.colors).build()
+
+            )
+
+        builder.suppressWarningTypes("RedundantVisibilityModifier", "USELESS_CAST")
+
+        builder.build().writeTo(params.file)
+    }
+
+    private fun addPropertiesForColors(
+        classBuilder: TypeSpec.Builder,
+        colors: List<Color>
+    ): TypeSpec.Builder {
+
+        var augmentedClassBuilder = classBuilder
+
+        colors.forEach { color ->
+            augmentedClassBuilder = classBuilder.addProperty(
+                PropertySpec.builder(
+                    color.nameForCode,
+                    composeTextStyleClass
+                ).getter(
+                    getterBuilder(color).build()
+                ).build()
+            )
+        }
+
+        return augmentedClassBuilder
+    }
+
+    private fun getterBuilder(color: Color): FunSpec.Builder {
+        return FunSpec.getterBuilder()
+            .addCode("colorResource(id = R.color.${color.nameForResource})")
+            /*.beginControlFlow("if (isSystemInDarkTheme()) {\n" +
+                    "   colorResource(id = R.color.color_light_background_additional_one)\n" +
+                    "   } else {\n" +
+                    "   colorResource(id = R.color.color_light_background_additional_one)\n" +
+                    "   }")*/
+            //.endControlFlow()
+            .addAnnotation(composableAnnotationClass)
+            .addAnnotation(composableImmutableAnnotationClass)
+    }
+
+    private fun createXmlForColors(colors: List<Color>, resourceFilePath: String = "src/main/res/exported_colors.xml") {
         val documentBuilderFactory = DocumentBuilderFactory.newInstance()
         val documentBuilder = documentBuilderFactory.newDocumentBuilder()
         val document = documentBuilder.newDocument()
@@ -35,7 +95,7 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
 
         colors.forEach { color ->
             val element = document.createElement("color")
-            element.setAttribute("name", color.name)
+            element.setAttribute("name", color.nameForResource)
             val redHex = "%02x".format((color.red * 255).roundToInt())
             val greenHex = "%02x".format((color.green * 255).roundToInt())
             val blueHex = "%02x".format((color.blue * 255).roundToInt())
@@ -54,7 +114,20 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2")
 
         val source = DOMSource(document)
-        val result = StreamResult("colors.xml")
+        val result = StreamResult(resourceFilePath)
         transformer.transform(source, result)
     }
+}
+
+internal fun FileSpec.Builder.suppressWarningTypes(vararg types: String) {
+    if (types.isEmpty()) {
+        return
+    }
+
+    val format = "%S,".repeat(types.count()).trimEnd(',')
+    addAnnotation(
+        AnnotationSpec.builder(ClassName("", "Suppress"))
+            .addMember(format, *types)
+            .build()
+    )
 }
