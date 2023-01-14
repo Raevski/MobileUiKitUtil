@@ -46,9 +46,7 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
                         .addAnnotation(immutableAnnotationClass), params.colors).build()
 
             )
-
-        builder.suppressWarningTypes("RedundantVisibilityModifier", "USELESS_CAST")
-
+        
         builder.build().writeTo(params.file)
     }
 
@@ -109,17 +107,4 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
         val result = StreamResult(resourceFilePath)
         transformer.transform(source, result)
     }
-}
-
-internal fun FileSpec.Builder.suppressWarningTypes(vararg types: String) {
-    if (types.isEmpty()) {
-        return
-    }
-
-    val format = "%S,".repeat(types.count()).trimEnd(',')
-    addAnnotation(
-        AnnotationSpec.builder(ClassName("", "Suppress"))
-            .addMember(format, *types)
-            .build()
-    )
 }
