@@ -71,16 +71,16 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
     }
 
     @OptIn(InternalAPI::class)
-    suspend fun downloadFile(file: File, url: String, callback: suspend (boolean: Boolean) -> Unit) {
+    suspend fun downloadFile(file: File, url: String) {
         val call = client.get {
             url(url)
             method = HttpMethod.Get
         }
         if (!call.status.isSuccess()) {
-            callback(false)
+            println("Failed while loading ")
+            return
         }
         call.content.copyAndClose(file.writeChannel())
-        return callback(true)
     }
 
     fun clean() {

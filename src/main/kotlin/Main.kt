@@ -3,6 +3,7 @@ import domain_layer.usecases.CreateFileUseCase
 import domain_layer.usecases.LoadColorsUseCase
 import domain_layer.usecases.ParseConfigUseCase
 import domain_layer.usecases.android.LoadAndGenerateComposeColors
+import domain_layer.usecases.android.LoadAndGenerateComposeIcons
 import domain_layer.usecases.android.LoadAndGenerateComposeStyles
 import network_layer.FigmaClient
 import network_layer.repositories.FigmaRepository
@@ -43,7 +44,8 @@ fun main(args: Array<String>) {
         }
 
         ExportResourceType.ICONS -> {
-
+            val loadAndGenerateComposeIcons = LoadAndGenerateComposeIcons(repository, figmaClient)
+            loadAndGenerateComposeIcons.execute(LoadAndGenerateComposeIcons.Params(params.fileHash, file))
         }
     }
 
