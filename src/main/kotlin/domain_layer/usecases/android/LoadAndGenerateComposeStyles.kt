@@ -11,8 +11,8 @@ class LoadAndGenerateComposeStyles(private val figmaRepository: FigmaRepository
         val loadTypographyUseCase = LoadTypographyUseCase(figmaRepository, params.figmaFileHash)
         val styles = loadTypographyUseCase.execute(null)
 
-        val generateComposeTypographyUseCase = GenerateComposeTypographyUseCase()
-        generateComposeTypographyUseCase.execute(GenerateComposeTypographyUseCase.Params(styles = styles,
+        val generateComposeTypography = GenerateComposeTypography()
+        generateComposeTypography.execute(GenerateComposeTypography.Params(styles = styles,
             file = params.resultFile))
     }
 

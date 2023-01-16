@@ -8,10 +8,9 @@ import javax.xml.transform.OutputKeys
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
-import kotlin.math.roundToInt
 import com.squareup.kotlinpoet.*
 
-class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCase.Params, Unit> {
+class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Unit> {
 
     companion object {
         const val COMPOSE_COLOR_CLASS_PACKAGE_NAME = "androidx.compose.ui.text"
@@ -36,7 +35,7 @@ class GenerateComposeColorsUseCase: MobileUtilUseCase<GenerateComposeColorsUseCa
     }
 
     private fun createComposeClasses(params: Params) {
-        val immutableAnnotationClass = ClassName(GenerateComposeTypographyUseCase.ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
+        val immutableAnnotationClass = ClassName(GenerateComposeTypography.ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
             "Immutable")
 
         val builder = FileSpec.builder(params.packageName, params.className)

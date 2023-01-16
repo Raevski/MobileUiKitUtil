@@ -7,12 +7,16 @@ import java.nio.file.Paths
 class CreateFileUseCase: MobileUtilUseCase<CreateFileUseCase.Params, File> {
     data class Params(val path: String,
                       val fileName: String,
-                      val fromScratch: Boolean = true)
+                      val isDirectory: Boolean = true)
 
     override fun execute(params: Params): File {
         val fileName = "./${params.path}"
 
         println("File path is $fileName")
+
+        if (!params.isDirectory) {
+            return File(fileName)
+        }
 
         val directory = File(fileName)
 

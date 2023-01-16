@@ -11,8 +11,8 @@ class LoadAndGenerateComposeColors(private val figmaRepository: FigmaRepository
         val loadColorsUseCase = LoadColorsUseCase(figmaRepository, params.figmaFileHash)
         val colors = loadColorsUseCase.execute(null)
 
-        val generateComposeColorsUseCase = GenerateComposeColorsUseCase()
-        generateComposeColorsUseCase.execute(GenerateComposeColorsUseCase.Params(colors = colors,
+        val generateComposeColorsUseCase = GenerateComposeColors()
+        generateComposeColorsUseCase.execute(GenerateComposeColors.Params(colors = colors,
             file = params.resultFile))
     }
 
