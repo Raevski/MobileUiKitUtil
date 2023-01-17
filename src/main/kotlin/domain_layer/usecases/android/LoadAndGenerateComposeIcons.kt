@@ -47,21 +47,27 @@ class LoadAndGenerateComposeIcons(
         val images = imagesMeta.values.toList()*/
 
         val createFileUseCase = CreateFileUseCase()
+        val resultImageNames = mutableListOf<String>()
         try {
             components.map { component ->
                 GlobalScope.launch(Dispatchers.IO) {
                     figmaClient.downloadFile(createFileUseCase.execute(
                         CreateFileUseCase.Params(
                             "src/main/res/drawables/",
-                            component.name.replace("/", "").lowercase() + ".png",
+                            component.pngImageName,
                             isDirectory = false
                         )
                     ), component.thumbnailUrl)
+                    resultImageNames.add(component.clearedName)
                 }
             }.joinAll()
         } catch (e: Throwable) {
             println("Failed loading")
         }
+
+        val generateComposeIcons = GenerateComposeIcons()
+        generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = resultImageNames,
+            file = params.resultFile))
     }
     data class Params(val figmaFileHash: String,
                       val resultFile: File,

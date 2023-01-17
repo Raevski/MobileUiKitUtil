@@ -13,7 +13,7 @@ import com.squareup.kotlinpoet.*
 class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Unit> {
 
     companion object {
-        const val COMPOSE_COLOR_CLASS_PACKAGE_NAME = "androidx.compose.ui.text"
+        const val COMPOSE_COLOR_CLASS_PACKAGE_NAME = "androidx.compose.ui.graphics"
         const val ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME = "androidx.compose.runtime"
     }
 
@@ -22,7 +22,7 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
                       val colors: List<Color> = listOf(),
                       val file: File)
 
-    private val composeTextStyleClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
+    private val composeColorClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
         "Color")
     private val composableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
         "Composable")
@@ -60,7 +60,7 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
             augmentedClassBuilder = classBuilder.addProperty(
                 PropertySpec.builder(
                     color.nameForCode,
-                    composeTextStyleClass
+                    composeColorClass
                 ).getter(
                     getterBuilder(color).build()
                 ).build()

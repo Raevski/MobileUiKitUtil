@@ -12,4 +12,10 @@ data class Component(val key: String,
                      val frameName: String,
                      val frameNodeId: String,
                      val pageId: String,
-                     val pageName: String)
+                     val pageName: String) {
+    val clearedName: String =
+        name.replace("/", "_").lowercase()
+
+
+    val pngImageName = "$clearedName.png"
+}
