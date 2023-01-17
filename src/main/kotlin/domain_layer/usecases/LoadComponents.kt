@@ -14,8 +14,8 @@ class LoadComponents(private val figmaRepository: FigmaRepository,
                 thumbnailUrl = componentData.thumbnailUrl,
                 name = componentData.name,
                 description = componentData.description,
-                frameName = componentData.containingFrame.name,
-                frameNodeId = componentData.containingFrame.nodeId,
+                frameName = componentData.containingFrame.name.orEmpty(),
+                frameNodeId = componentData.containingFrame.nodeId.orEmpty(),
                 pageId = componentData.containingFrame.pageId,
                 pageName = componentData.containingFrame.pageName)
         }

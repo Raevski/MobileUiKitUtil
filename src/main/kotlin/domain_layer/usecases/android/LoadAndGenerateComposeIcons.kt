@@ -44,22 +44,24 @@ class LoadAndGenerateComposeIcons(
         val nodes: Map<String, Node> =
             figmaRepository.getNodes(params.figmaFileHash, imagesMeta.keys.toList()).nodes
 
-        val images = imagesMeta.values.toList()
+        val images = imagesMeta.values.toList()*/
+        
         val createFileUseCase = CreateFileUseCase()
-
         try {
-            images.map { imagePath ->
-                val file = createFileUseCase.execute(
-                    CreateFileUseCase.Params(
-                        "src/main/res/drawables/",
-                        getFileNameFromNode(imagePath, nodes, imagesMeta)
-                    )
-                )
-                figmaClient.downloadFile(file, imagePath)
-            }
+            components.map { component ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    figmaClient.downloadFile(createFileUseCase.execute(
+                        CreateFileUseCase.Params(
+                            "src/main/res/drawables/",
+                            component.name.replace("/", "").lowercase() + ".png",
+                            isDirectory = false
+                        )
+                    ), component.thumbnailUrl)
+                }
+            }.joinAll()
         } catch (e: Throwable) {
             println("Failed loading")
-        }*/
+        }
     }
     data class Params(val figmaFileHash: String,
                       val resultFile: File,
