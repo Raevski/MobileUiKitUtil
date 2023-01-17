@@ -6,7 +6,9 @@ data class UtilParams(
     val figmaToken: String,
     val fileHash: String,
     val isLogging: Boolean,
-    val resultPath: String
+    val resultPath: String,
+    val nodeId: String,
+    val pageName: String
 ) {
     companion object {
 
@@ -20,6 +22,8 @@ data class UtilParams(
             val resourceType = args.getOrElse(3) { "" }.getExportResourceType()
             val isLoggingParam = args.get(4).orEmpty()
             val filePath = args.get(5).orEmpty()
+            val nodeId = args.get(6).orEmpty()
+            val pageName = args.get(7).orEmpty()
 
             var isLogging = false
 
@@ -29,7 +33,7 @@ data class UtilParams(
                 isLogging = isLoggingParam.toBoolean()
             }
 
-            return UtilParams(platform, resourceType, figmaToken, fileHash, isLogging, filePath)
+            return UtilParams(platform, resourceType, figmaToken, fileHash, isLogging, filePath, nodeId, pageName)
         }
     }
 }

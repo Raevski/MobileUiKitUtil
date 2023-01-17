@@ -3,7 +3,7 @@ package network_layer.repositories
 import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import network_layer.FigmaClient
-import network_layer.models.ComponentsResponse
+import network_layer.models.components.ComponentsResponse
 import network_layer.models.images.ImagesResponse
 import network_layer.models.nodes.NodesResponse
 import network_layer.models.styles.FigmaStylesResponse

@@ -29,6 +29,8 @@ class ParseConfigUseCase : MobileUtilUseCase<ParseConfigUseCase.Params, UtilPara
             config.figmaToken,
             config.fileHash,
             config.isLogging,
-            config.resultPath)
+            config.resultPath,
+            config.nodeId,
+            config.pageName)
     }
 }
