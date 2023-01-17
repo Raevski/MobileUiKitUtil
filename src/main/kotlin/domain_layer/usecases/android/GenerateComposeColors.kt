@@ -29,7 +29,7 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
     private val composableImmutableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
         "ReadOnlyComposable")
 
-    override fun execute(params: Params) {
+    override suspend fun execute(params: Params) {
         createXmlForColors(params.colors)
         createComposeClasses(params)
     }

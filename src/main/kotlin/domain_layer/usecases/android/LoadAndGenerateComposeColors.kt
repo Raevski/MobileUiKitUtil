@@ -7,7 +7,7 @@ import java.io.File
 
 class LoadAndGenerateComposeColors(private val figmaRepository: FigmaRepository
 ) : MobileUtilUseCase<LoadAndGenerateComposeColors.Params, Unit> {
-    override fun execute(params: Params) {
+    override suspend fun execute(params: Params) {
         val loadColorsUseCase = LoadColorsUseCase(figmaRepository, params.figmaFileHash)
         val colors = loadColorsUseCase.execute(null)
 

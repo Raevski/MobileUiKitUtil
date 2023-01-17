@@ -9,7 +9,7 @@ class CreateFileUseCase: MobileUtilUseCase<CreateFileUseCase.Params, File> {
                       val fileName: String,
                       val isDirectory: Boolean = true)
 
-    override fun execute(params: Params): File {
+    override suspend fun execute(params: Params): File {
         val fileName = "./${params.path}"
 
         println("File path is $fileName")

@@ -10,7 +10,7 @@ import kotlin.script.experimental.api.ResultWithDiagnostics
 class ParseConfigUseCase : MobileUtilUseCase<ParseConfigUseCase.Params, UtilParams> {
     class Params(val args: Array<String>)
 
-    override fun execute(params: Params): UtilParams {
+    override suspend fun execute(params: Params): UtilParams {
         val scriptFile = File(params.args[0])
 
         println("Executing script $scriptFile")

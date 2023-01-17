@@ -5,6 +5,7 @@ import domain_layer.usecases.LoadImagesPathsUseCase
 import domain_layer.usecases.MobileUtilUseCase
 import kotlinx.coroutines.*
 import network_layer.FigmaClient
+import network_layer.models.nodes.Node
 import network_layer.repositories.FigmaRepository
 import java.io.File
 import java.net.URI
@@ -13,27 +14,37 @@ class LoadAndGenerateComposeIcons(
     private val figmaRepository: FigmaRepository,
     private val figmaClient: FigmaClient
 ): MobileUtilUseCase<LoadAndGenerateComposeIcons.Params, Unit> {
-    override fun execute(params: Params) {
+    override suspend fun execute(params: Params) {
         val loadImagesPath = LoadImagesPathsUseCase(figmaRepository, params.figmaFileHash)
-        val images = loadImagesPath.execute(null)
+        val imagesMeta = loadImagesPath.execute(null)
 
+        val nodes: Map<String, Node> =
+            figmaRepository.getNodes(params.figmaFileHash, imagesMeta.keys.toList()).nodes
+
+        val images = imagesMeta.values.toList()
         val createFileUseCase = CreateFileUseCase()
 
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                images.map { imagePath ->
-                    val file = createFileUseCase.execute(
-                        CreateFileUseCase.Params("src/main/res/drawables/", imagePath.getFileNameFromUrl())
+        try {
+            images.map { imagePath ->
+                val file = createFileUseCase.execute(
+                    CreateFileUseCase.Params(
+                        "src/main/res/drawables/",
+                        getFileNameFromNode(imagePath, nodes, imagesMeta)
                     )
-                    launch { figmaClient.downloadFile(file, imagePath) }
-                }.joinAll()
-            } catch (e: Throwable) {
-                println("Failed loading ")
+                )
+                figmaClient.downloadFile(file, imagePath)
             }
+        } catch (e: Throwable) {
+            println("Failed loading")
         }
     }
-
     data class Params(val figmaFileHash: String, val resultFile: File)
+}
+
+fun getFileNameFromNode(imagePath: String, nodes: Map<String, Node>, imagesMeta: Map<String, String>): String {
+    val imagesMetaItem = imagesMeta.entries.find { it.value == imagePath }
+
+    return nodes[imagesMetaItem?.key]?.document?.name ?: imagePath
 }
 
 fun String.getFileNameFromUrl(): String {

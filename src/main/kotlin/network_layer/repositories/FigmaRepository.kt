@@ -3,7 +3,7 @@ package network_layer.repositories
 import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import network_layer.FigmaClient
-import network_layer.models.images.FigmaImagesResponse
+import network_layer.models.images.ImagesResponse
 import network_layer.models.nodes.NodesResponse
 import network_layer.models.styles.FigmaStylesResponse
 
@@ -41,10 +41,10 @@ class FigmaRepository(private val figmaClient: FigmaClient,
         return body
     }
 
-    suspend fun getImages(fileId: String): FigmaImagesResponse {
+    suspend fun getImages(fileId: String): ImagesResponse {
         val imagesResponse = figmaClient.getImages(fileId)
 
-        val body: FigmaImagesResponse = imagesResponse.body()
+        val body: ImagesResponse = imagesResponse.body()
 
         if (isLogging) {
             println(imagesResponse.bodyAsText())

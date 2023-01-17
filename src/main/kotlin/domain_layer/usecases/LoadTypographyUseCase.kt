@@ -11,19 +11,15 @@ import network_layer.repositories.FigmaRepository
 
 class LoadTypographyUseCase(private val figmaRepository: FigmaRepository,
                             private val fileId: String) : MobileUtilUseCase<Nothing?, List<TextStyle>>{
-    override fun execute(params: Nothing?): List<TextStyle> {
+    override suspend fun execute(params: Nothing?): List<TextStyle> {
         println("Start loading typography from file $fileId")
 
-        val nodesResponseBody: NodesResponse
-        val stylesResponseBody: FigmaStylesResponse
 
-        runBlocking {
-            stylesResponseBody = figmaRepository.getStyles(fileId)
+        val stylesResponseBody = figmaRepository.getStyles(fileId)
 
-            val nodeIds = stylesResponseBody.meta.styles.map { it.nodeId }
+        val nodeIds = stylesResponseBody.meta.styles.map { it.nodeId }
 
-            nodesResponseBody = figmaRepository.getNodes(fileId, nodeIds)
-        }
+        val nodesResponseBody = figmaRepository.getNodes(fileId, nodeIds)
 
         println("Typography was successfully exported from file $fileId")
 

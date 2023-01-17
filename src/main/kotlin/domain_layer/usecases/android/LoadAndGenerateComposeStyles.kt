@@ -7,7 +7,7 @@ import java.io.File
 
 class LoadAndGenerateComposeStyles(private val figmaRepository: FigmaRepository
 ) : MobileUtilUseCase<LoadAndGenerateComposeStyles.Params, Unit> {
-    override fun execute(params: Params) {
+    override suspend fun execute(params: Params) {
         val loadTypographyUseCase = LoadTypographyUseCase(figmaRepository, params.figmaFileHash)
         val styles = loadTypographyUseCase.execute(null)
 

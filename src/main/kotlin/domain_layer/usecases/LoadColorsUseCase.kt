@@ -11,24 +11,18 @@ import network_layer.repositories.FigmaRepository
 
 class LoadColorsUseCase(private val figmaRepository: FigmaRepository,
                         private val fileId: String) : MobileUtilUseCase<Nothing?, List<Color>>{
-    override fun execute(params: Nothing?): List<Color> {
+    override suspend fun execute(params: Nothing?): List<Color> {
         println("Start loading colors from file $fileId")
 
-        val nodesResponseBody: NodesResponse
-        val stylesResponseBody: FigmaStylesResponse
-        val styles: List<FigmaStyleData>
+        val stylesResponseBody = figmaRepository.getStyles(fileId)
 
-        runBlocking {
-            stylesResponseBody = figmaRepository.getStyles(fileId)
-
-            styles = stylesResponseBody.meta.styles.filter {
-                it.styleType == FigmaStyleType.FILL && it.useStyle()
-            }
-
-            val nodeIds = styles.map { it.nodeId }
-
-            nodesResponseBody = figmaRepository.getNodes(fileId, nodeIds)
+        val styles = stylesResponseBody.meta.styles.filter {
+            it.styleType == FigmaStyleType.FILL && it.useStyle()
         }
+
+        val nodeIds = styles.map { it.nodeId }
+
+        val nodesResponseBody = figmaRepository.getNodes(fileId, nodeIds)
 
         return nodesResponseBody.nodes.keys.map { key ->
             val node = nodesResponseBody.nodes[key]

@@ -81,6 +81,7 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
             return
         }
         call.content.copyAndClose(file.writeChannel())
+        println("Successfully download of icons")
     }
 
     fun clean() {

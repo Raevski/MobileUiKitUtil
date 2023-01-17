@@ -6,13 +6,8 @@ import network_layer.repositories.FigmaRepository
 
 class LoadImagesPathsUseCase (private val figmaRepository: FigmaRepository,
                               private val fileId: String
-) : MobileUtilUseCase<Nothing?, List<String>>{
-    override fun execute(params: Nothing?): List<String> {
-        val imagesPathsInfo: List<String>
-        runBlocking {
-            imagesPathsInfo = figmaRepository.getImages(fileId).images.values.toList()
-        }
-
-        return imagesPathsInfo
+) : MobileUtilUseCase<Nothing?, Map<String, String>>{
+    override suspend fun execute(params: Nothing?): Map<String, String> {
+        return figmaRepository.getImages(fileId).meta.images
     }
 }

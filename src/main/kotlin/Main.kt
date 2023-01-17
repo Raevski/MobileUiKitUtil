@@ -19,13 +19,13 @@ fun main(args: Array<String>) {
 
     println("Program arguments: ${args.joinToString()}")
 
-    val params = ParseConfigUseCase().execute(ParseConfigUseCase.Params(args))
+    val params = ParseConfigUseCase().executeBlocking(ParseConfigUseCase.Params(args))
 
     val figmaClient = FigmaClient(figmaToken = params.figmaToken)
     val repository = FigmaRepository(figmaClient, params.isLogging)
 
     val createFileUseCase = CreateFileUseCase()
-    val file = createFileUseCase.execute(
+    val file = createFileUseCase.executeBlocking(
         CreateFileUseCase.Params(
             params.resultPath,
             "${params.resourceType.resourceTypeString}.kt"
@@ -35,17 +35,17 @@ fun main(args: Array<String>) {
     when(params.resourceType) {
         ExportResourceType.TYPOGRAPHY -> {
             val loadAndGenerateComposeStyles = LoadAndGenerateComposeStyles(repository)
-            loadAndGenerateComposeStyles.execute(LoadAndGenerateComposeStyles.Params(params.fileHash, file))
+            loadAndGenerateComposeStyles.executeBlocking(LoadAndGenerateComposeStyles.Params(params.fileHash, file))
         }
 
         ExportResourceType.COLORS -> {
             val loadAndGenerateComposeColors = LoadAndGenerateComposeColors(repository)
-            loadAndGenerateComposeColors.execute(LoadAndGenerateComposeColors.Params(params.fileHash, file))
+            loadAndGenerateComposeColors.executeBlocking(LoadAndGenerateComposeColors.Params(params.fileHash, file))
         }
 
         ExportResourceType.ICONS -> {
             val loadAndGenerateComposeIcons = LoadAndGenerateComposeIcons(repository, figmaClient)
-            loadAndGenerateComposeIcons.execute(LoadAndGenerateComposeIcons.Params(params.fileHash, file))
+            loadAndGenerateComposeIcons.executeBlocking(LoadAndGenerateComposeIcons.Params(params.fileHash, file))
         }
     }
 
