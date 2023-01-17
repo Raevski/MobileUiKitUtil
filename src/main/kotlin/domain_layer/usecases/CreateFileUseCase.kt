@@ -15,6 +15,12 @@ class CreateFileUseCase: MobileUtilUseCase<CreateFileUseCase.Params, File> {
         println("File path is $fileName")
 
         if (!params.isDirectory) {
+            val directory = File(fileName)
+
+            if (!directory.isDirectory) {
+                Files.createDirectory(Paths.get(fileName)).toFile()
+            }
+
             return File(fileName + params.fileName)
         }
 

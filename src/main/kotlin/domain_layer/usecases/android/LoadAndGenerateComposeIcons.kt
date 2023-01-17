@@ -45,7 +45,7 @@ class LoadAndGenerateComposeIcons(
             figmaRepository.getNodes(params.figmaFileHash, imagesMeta.keys.toList()).nodes
 
         val images = imagesMeta.values.toList()*/
-        
+
         val createFileUseCase = CreateFileUseCase()
         try {
             components.map { component ->
