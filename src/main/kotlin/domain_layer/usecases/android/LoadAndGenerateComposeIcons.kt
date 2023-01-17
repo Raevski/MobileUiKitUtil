@@ -1,6 +1,7 @@
 package domain_layer.usecases.android
 
 import domain_layer.usecases.CreateFileUseCase
+import domain_layer.usecases.LoadComponents
 import domain_layer.usecases.LoadImagesPathsUseCase
 import domain_layer.usecases.MobileUtilUseCase
 import kotlinx.coroutines.*
@@ -15,6 +16,8 @@ class LoadAndGenerateComposeIcons(
     private val figmaClient: FigmaClient
 ): MobileUtilUseCase<LoadAndGenerateComposeIcons.Params, Unit> {
     override suspend fun execute(params: Params) {
+        val components = LoadComponents(figmaRepository, params.figmaFileHash).execute(null)
+
         val loadImagesPath = LoadImagesPathsUseCase(figmaRepository, params.figmaFileHash)
         val imagesMeta = loadImagesPath.execute(null)
 
