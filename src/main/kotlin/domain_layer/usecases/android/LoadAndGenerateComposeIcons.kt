@@ -1,5 +1,6 @@
 package domain_layer.usecases.android
 
+import domain_layer.models.ImageToDownload
 import domain_layer.usecases.CreateFileUseCase
 import domain_layer.usecases.LoadComponents
 import domain_layer.usecases.LoadImagesPathsUseCase
@@ -38,27 +39,28 @@ class LoadAndGenerateComposeIcons(
             return
         }
 
-        /*val loadImagesPath = LoadImagesPathsUseCase(figmaRepository, params.figmaFileHash)
-        val imagesMeta = loadImagesPath.execute(null)
+        val componentsNodes = components.map { it.nodeId }
 
-        val nodes: Map<String, Node> =
-            figmaRepository.getNodes(params.figmaFileHash, imagesMeta.keys.toList()).nodes
-
-        val images = imagesMeta.values.toList()*/
+        val loadImagesPath = LoadImagesPathsUseCase(figmaRepository, params.figmaFileHash)
+        val imagesMeta = loadImagesPath.execute(LoadImagesPathsUseCase.Params("svg", componentsNodes))
 
         val createFileUseCase = CreateFileUseCase()
-        val resultImageNames = mutableListOf<String>()
+        val imagesToDownload = components.map { component ->
+            ImageToDownload(component.nodeId, imagesMeta[component.nodeId].orEmpty(),
+                component.svgName,
+                component.clearedName)
+        }
+
         try {
-            components.map { component ->
+            imagesToDownload.map { image ->
                 GlobalScope.launch(Dispatchers.IO) {
                     figmaClient.downloadFile(createFileUseCase.execute(
                         CreateFileUseCase.Params(
                             "src/main/res/drawables/",
-                            component.pngImageName,
+                            image.imageFileName,
                             isDirectory = false
                         )
-                    ), component.thumbnailUrl)
-                    resultImageNames.add(component.clearedName)
+                    ), image.path)
                 }
             }.joinAll()
         } catch (e: Throwable) {
@@ -66,7 +68,7 @@ class LoadAndGenerateComposeIcons(
         }
 
         val generateComposeIcons = GenerateComposeIcons()
-        generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = resultImageNames,
+        generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = imagesToDownload.map {it.assetName},
             file = params.resultFile))
     }
     data class Params(val figmaFileHash: String,

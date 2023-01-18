@@ -14,8 +14,10 @@ data class Component(val key: String,
                      val pageId: String,
                      val pageName: String) {
     val clearedName: String =
-        name.replace("/", "_").lowercase()
+        name.replace("/", "_").replace(" ", "").lowercase()
 
 
     val pngImageName = "$clearedName.png"
+
+    val svgName = "$clearedName.svg"
 }

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ImagesResponse(
-    val meta: ImagesMeta = ImagesMeta()
+    val images: Map<String, String> = mapOf()
 )

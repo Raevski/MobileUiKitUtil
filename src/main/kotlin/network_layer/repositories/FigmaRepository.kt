@@ -42,8 +42,8 @@ class FigmaRepository(private val figmaClient: FigmaClient,
         return body
     }
 
-    suspend fun getImages(fileId: String): ImagesResponse {
-        val imagesResponse = figmaClient.getImages(fileId)
+    suspend fun getImages(fileId: String, ids: List<String>, format: String = "svg"): ImagesResponse {
+        val imagesResponse = figmaClient.getImages(fileId, format, ids)
 
         val body: ImagesResponse = imagesResponse.body()
 

@@ -5,6 +5,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -55,15 +56,19 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
     }
 
     suspend fun getNodes(fileId: String, ids: List<String>): HttpResponse {
-        return makeRequest(listOf("files", fileId, "nodes"), mapOf<String, List<String>>("ids" to ids))
+        return makeRequest(listOf("files", fileId, "nodes"), mapOf("ids" to ids))
     }
 
     suspend fun getStyles(fileId: String): HttpResponse {
         return makeRequest(listOf("files", fileId, "styles"))
     }
 
-    suspend fun getImages(fileId: String): HttpResponse {
-        return makeRequest(listOf("files", fileId, "images"))
+    suspend fun getImages(fileId: String,
+                          format: String,
+                          ids: List<String>): HttpResponse {
+        return makeRequest(listOf("images", fileId),
+            mapOf("ids" to ids,
+                "format" to listOf(format)))
     }
 
     suspend fun getComponents(fileId: String): HttpResponse {
