@@ -19,18 +19,18 @@ command line tool.
 
 - [x] Reading config for util from dsl file and parsing it for model params
 - [x] Generating Android JetPack Compose typography class for Android Project 
-- [ ] Generating Android JetPack Compose colors class for Android Project
-- [ ] Generating Android JetPack Compose icons class for Android Project
+- [x] Generating Android JetPack Compose colors class for Android Project
+- [x] Generating Android JetPack Compose icons class for Android Project
 - [ ] Generating IOS SWIFTUI typography class for Xcode Project
 - [ ] Generating IOS SWIFTUI colors class for Xcode Project
 - [ ] Generating IOS SWIFTUI icons class for Xcode Project
 - [ ] Generating Android Xml typography file for Android Project
-- [ ] Generating Android Xml colors file for Android Project
-- [ ] Generating Android icons files for Android Project
+- [x] Generating Android Xml colors file for Android Project
+- [x] Generating Android icons files for Android Project
 - [ ] Generating IOS typography file for XCode Project
 - [ ] Generating IOS colors file for XCode Project
 - [ ] Generating IOS icons files for XCode Project
-- [ ] Support for tokenization for styles, colors, icons names
+- [x] Support for tokenization for styles, colors, icons names
 
 ## Config
 
