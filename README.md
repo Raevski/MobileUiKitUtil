@@ -40,14 +40,16 @@ and enter your preferences
 ### Config sample
 ```
 MobileFigmaExportConfig {
-    figmaToken = "your figma api token"
-    fileHash = "your figma file id hash"
+    figmaToken = "here should be your token"
+    fileHash = "here should be your figma layout file hash"
+    nodeId = "17:187"
+    pageName = "Icons"
     platform = "android"
-    resourceType = "Typography"
+    resourceType = "Icons"
     isLogging = true
-    resultPath = "src/main/res"
+    resultPath = "src/main/res/figma-drawables"
     tokenization {
-        "body_3" to "bodyMain"
+        "headline" to "Headline"
     }
 }
 ```
