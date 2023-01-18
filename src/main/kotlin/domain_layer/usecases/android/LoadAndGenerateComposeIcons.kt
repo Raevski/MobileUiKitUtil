@@ -58,15 +58,20 @@ class LoadAndGenerateComposeIcons(
                 GlobalScope.launch(Dispatchers.IO) {
                     val svgFile = createFileUseCase.execute(
                         CreateFileUseCase.Params(
-                            "src/main/res/drawables/",
+                            params.resourcesPath,
                             image.imageFileName,
                             isDirectory = false
                         )
                     )
                     figmaClient.downloadFile(svgFile, image.path)
-                    Svg2Vector.parseSvgToXml(svgFile,
-                        FileOutputStream("src/main/res/drawables/${image.assetName}.xml"))
-                    //svgFile.delete()
+                    val errors = Svg2Vector.parseSvgToXml(svgFile,
+                        FileOutputStream("${params.resourcesPath}${image.assetName}.xml"))
+                    if (errors.isNullOrEmpty()) {
+                        File("${params.resourcesPath}${image.imageFileName}").delete()
+                    } else {
+                        File("${params.resourcesPath}${image.assetName}.xml").delete()
+                        downloadPngFiles()
+                    }
                 }
             }.joinAll()
         } catch (e: Throwable) {
@@ -77,10 +82,16 @@ class LoadAndGenerateComposeIcons(
         generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = imagesToDownload.map {it.assetName},
             file = params.resultFile))
     }
+
+    private fun downloadPngFiles() {
+        //TODO: Implement method
+    }
+
     data class Params(val figmaFileHash: String,
                       val resultFile: File,
                       val pageName: String? = null,
-                      val nodeId: String? = null )
+                      val nodeId: String? = null,
+                      val resourcesPath: String = "src/main/res/drawables/")
 }
 
 fun getFileNameFromNode(imagePath: String, nodes: Map<String, Node>, imagesMeta: Map<String, String>): String {
