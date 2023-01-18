@@ -7,36 +7,56 @@ import java.util.*
  * Used to represent one VectorDrawble's path element.
  */
 internal class VdPath : VdElement() {
+    @JvmField
     var mNode: Array<Node>? = null
+    @JvmField
     var mStrokeColor = 0
+    @JvmField
     var mFillColor = 0
+    @JvmField
     var mStrokeWidth = 0f
+    @JvmField
     var mRotate = 0f
+    @JvmField
     var mShiftX = 0f
+    @JvmField
     var mShiftY = 0f
+    @JvmField
     var mRotateX = 0f
+    @JvmField
     var mRotateY = 0f
     var trimPathStart = 0f
     var trimPathEnd = 1f
     var trimPathOffset = 0f
+    @JvmField
     var mStrokeLineCap = -1
+    @JvmField
     var mStrokeLineJoin = -1
+    @JvmField
     var mStrokeMiterlimit = -1f
+    @JvmField
     var mClip = false
+    @JvmField
     var mStrokeOpacity = Float.NaN
+    @JvmField
     var mFillOpacity = Float.NaN
+    @JvmField
     var mTrimPathStart = 0f
+    @JvmField
     var mTrimPathEnd = 1f
+    @JvmField
     var mTrimPathOffset = 0f
     fun toPath(path: Path2D) {
         path.reset()
         if (mNode != null) {
-            VdNodeRender.creatPath(mNode, path)
+            VdNodeRender.creatPath(mNode!!, path)
         }
     }
 
     class Node {
+        @JvmField
         var type: Char
+        @JvmField
         var params: FloatArray
 
         constructor(type: Char, params: FloatArray) {
@@ -205,8 +225,8 @@ internal class VdPath : VdElement() {
             offx: Int,
             offy: Int
         ) {
-            val inx: Float = if (offx < 0) 1 else params[offx]
-            val iny: Float = if (offy < 0) 1 else params[offy]
+            val inx: Float = if (offx < 0) 1f else params[offx]
+            val iny: Float = if (offy < 0) 1f else params[offy]
             val x = inx * a + iny * c + e
             val y = inx * b + iny * d + f
             if (offx >= 0) {
@@ -218,6 +238,7 @@ internal class VdPath : VdElement() {
         }
 
         companion object {
+            @JvmStatic
             fun NodeListToString(nodes: Array<Node>): String {
                 var s = ""
                 for (i in nodes.indices) {
@@ -240,6 +261,7 @@ internal class VdPath : VdElement() {
                 return s
             }
 
+            @JvmStatic
             fun transform(
                 a: Float,
                 b: Float,
@@ -258,7 +280,7 @@ internal class VdPath : VdElement() {
     }
 
     init {
-        mName = this.toString() // to ensure paths have unique names
+        name = this.toString() // to ensure paths have unique names
     }
 
     /**

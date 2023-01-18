@@ -542,11 +542,11 @@ object SdkConstants {
     val OS_PLATFORM_ANT_FOLDER = FD_ANT + File.separator
 
     /** Path of the attrs.xml file relative to a platform folder.  */
-    val OS_PLATFORM_ATTRS_XML = OS_PLATFORM_RESOURCES_FOLDER + FD_RES_VALUES + File.separator +
+    val OS_PLATFORM_ATTRS_XML = OS_PLATFORM_RESOURCES_FOLDER + "values" + File.separator +
             FN_ATTRS_XML
 
     /** Path of the attrs_manifest.xml file relative to a platform folder.  */
-    val OS_PLATFORM_ATTRS_MANIFEST_XML = OS_PLATFORM_RESOURCES_FOLDER + FD_RES_VALUES + File.separator +
+    val OS_PLATFORM_ATTRS_MANIFEST_XML = OS_PLATFORM_RESOURCES_FOLDER + "values" + File.separator +
             FN_ATTRS_MANIFEST_XML
 
     /** Path of the layoutlib.jar file relative to a platform folder.  */
@@ -709,7 +709,7 @@ object SdkConstants {
     const val FD_RES_MIPMAP = "mipmap" //$NON-NLS-1$
 
     /** Default values resource folder name, i.e. "values"  */
-    const val FD_RES_VALUES = "values" //$NON-NLS-1$
+    private const val FD_RES_VALUES = "values" //$NON-NLS-1$
 
     /** Default xml resource folder name, i.e. "xml"  */
     const val FD_RES_XML = "xml" //$NON-NLS-1$

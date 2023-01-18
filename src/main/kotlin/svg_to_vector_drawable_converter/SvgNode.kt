@@ -9,7 +9,7 @@ import java.io.OutputStreamWriter
  */
 internal abstract class SvgNode(// Keep a reference to the tree in order to dump the error log.
     protected val tree: SvgTree, // Use document node to get the line number for error reporting.
-    val documentNode: Node, var name: String
+    val documentNode: Node, open var name: String
 ) {
 
     /**

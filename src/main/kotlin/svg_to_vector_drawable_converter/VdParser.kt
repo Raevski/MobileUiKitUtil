@@ -206,7 +206,7 @@ internal class VdParser {
         if (PATH_DESCRIPTION == name) {
             vgPath.mNode = parsePath(value)
         } else if (PATH_ID == name) {
-            vgPath.mName = value
+            vgPath.name = value
         } else if (PATH_FILL == name) {
             vgPath.mFillColor = calculateColor(value)
             if (!java.lang.Float.isNaN(vgPath.mFillOpacity)) {
@@ -350,6 +350,7 @@ internal class VdParser {
             return end
         }
 
+        @JvmStatic
         fun parsePath(value: String): Array<VdPath.Node> {
             var start = 0
             var end = 1

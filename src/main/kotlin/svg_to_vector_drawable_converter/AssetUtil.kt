@@ -31,6 +31,7 @@ object AssetUtil {
      * @param height The height of the new image.
      * @return The newly created image.
      */
+    @JvmStatic
     fun newArgbBufferedImage(width: Int, height: Int): BufferedImage {
         return BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     }
@@ -305,6 +306,7 @@ object AssetUtil {
      * @param dstRect The destination rectangle in the destination canvas into which to draw the
      * image.
      */
+    @JvmStatic
     fun drawCenterInside(g: Graphics2D, source: BufferedImage, dstRect: Rectangle) {
         val srcWidth = source.width
         val srcHeight = source.height

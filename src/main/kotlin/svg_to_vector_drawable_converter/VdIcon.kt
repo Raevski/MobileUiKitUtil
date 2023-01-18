@@ -6,6 +6,7 @@ import java.awt.Component
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Rectangle
+import java.lang.StringBuilder
 import java.net.URL
 import javax.swing.Icon
 
@@ -28,7 +29,7 @@ class VdIcon(url: URL) : Icon, Comparable<VdIcon> {
     fun setDynamicIcon(url: URL) {
         val p = VdParser()
         try {
-            mVdTree = p.parse(url.openStream(), null)
+            mVdTree = p.parse(url.openStream(), StringBuilder(""))
         } catch (e: Exception) {
             e.printStackTrace()
         }

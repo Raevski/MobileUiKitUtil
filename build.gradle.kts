@@ -43,6 +43,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jsr223")
+    implementation("com.google.guava:guava:r05")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")

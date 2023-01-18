@@ -14,10 +14,15 @@ import java.util.logging.Logger
  * Represent the SVG file in an internal data structure as a tree.
  */
 internal class SvgTree {
+    @JvmField
     var w = 0f
+    @JvmField
     var h = 0f
-    var matrix: FloatArray?
-    var viewBox: FloatArray?
+    @JvmField
+    var matrix: FloatArray? = null
+    @JvmField
+    var viewBox: FloatArray? = null
+    @JvmField
     var mScaleFactor = 1f
     var root: SvgGroupNode? = null
     private var mFileName: String? = null

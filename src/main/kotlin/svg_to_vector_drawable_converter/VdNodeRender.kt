@@ -404,8 +404,7 @@ internal object VdNodeRender {
             val ep2x = -a * cosTheta * sinEta2 - b * sinTheta * cosEta2
             val ep2y = -a * sinTheta * sinEta2 + b * cosTheta * cosEta2
             val tanDiff2 = Math.tan((eta2 - eta1) / 2)
-            val alpha = Math.sin(eta2 - eta1)
-            * (Math.sqrt(4 + 3 * tanDiff2 * tanDiff2) - 1) / 3
+            val alpha = Math.sin(eta2 - eta1) * (Math.sqrt(4 + 3 * tanDiff2 * tanDiff2) - 1) / 3
             val q1x = e1x + alpha * ep1x
             val q1y = e1y + alpha * ep1y
             val q2x = e2x - alpha * ep2x

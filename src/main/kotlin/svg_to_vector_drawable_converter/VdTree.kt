@@ -11,12 +11,15 @@ import java.util.logging.Logger
  * Used to represent the whole VectorDrawable XML file's tree.
  */
 internal class VdTree {
-    var mCurrentGroup = VdGroup()
+    var mCurrentGroup: VdGroup = VdGroup()
     var mChildren: ArrayList<VdElement?>? = null
     var baseWidth = 1f
     var baseHeight = 1f
+    @JvmField
     var mPortWidth = 1f
+    @JvmField
     var mPortHeight = 1f
+    @JvmField
     var mRootAlpha = 1f
 
     /**
@@ -27,7 +30,7 @@ internal class VdTree {
         mChildren = mCurrentGroup.children
     }
 
-    fun add(pathOrGroup: VdElement?) {
+    fun add(pathOrGroup: VdElement) {
         mCurrentGroup.add(pathOrGroup)
     }
 

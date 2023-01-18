@@ -44,6 +44,7 @@ object PositionXmlParser {
     /**
      * @see PositionXmlParser.parse
      */
+    @JvmStatic
     @JvmOverloads
     @Throws(ParserConfigurationException::class, SAXException::class, IOException::class)
     fun parse(input: InputStream, checkDtd: Boolean = true): Document {
@@ -125,7 +126,7 @@ object PositionXmlParser {
                 handler
             )
             parser.parse(input, handler)
-            handler.getDocument()
+            handler.document
         } catch (e: SAXException) {
             if (checkBom && e.message!!.contains("Content is not allowed in prolog")) {
                 // Byte order mark in the string? Skip it. There are many markers
@@ -256,18 +257,18 @@ object PositionXmlParser {
         }
         var xml: String? = null
         try {
-            xml = kotlin.String(data, offset, length, charset)
+            xml = String(data, offset, length, charset(charset))
         } catch (e: UnsupportedEncodingException) {
             try {
                 if (charset !== defaultCharset) {
-                    xml = kotlin.String(data, offset, length, defaultCharset)
+                    xml = String(data, offset, length, charset(defaultCharset))
                 }
             } catch (u: UnsupportedEncodingException) {
                 // Just use the default encoding below
             }
         }
         if (xml == null) {
-            xml = kotlin.String(data, offset, length)
+            xml = String(data, offset, length)
         }
         return xml
     }
@@ -280,6 +281,7 @@ object PositionXmlParser {
      * @return the position, or null if the node type is not supported for
      * position info
      */
+    @JvmStatic
     fun getPosition(node: Node): SourcePosition {
         return getPosition(node, -1, -1)
     }
@@ -317,8 +319,8 @@ object PositionXmlParser {
             val attr = node
             val pos = attr.ownerElement.getUserData(POS_KEY) as Position
             if (pos != null) {
-                var startOffset: Int = pos.getOffset()
-                var endOffset: Int = pos.getEnd().getOffset()
+                var startOffset: Int = pos.offset
+                var endOffset: Int = pos.end?.offset ?: 0
                 if (start != -1) {
                     startOffset += start
                     if (end != -1) {
@@ -341,9 +343,9 @@ object PositionXmlParser {
                 return if (matcher.find(startOffset) && matcher.start(1) <= endOffset) {
                     val index = matcher.start(1)
                     // Adjust the line and column to this new offset
-                    var line: Int = pos.getLine()
-                    var column: Int = pos.getColumn()
-                    for (offset in pos.getOffset() until index) {
+                    var line: Int = pos.line
+                    var column: Int = pos.column
+                    for (offset in pos.offset until index) {
                         val t = contents[offset]
                         if (t == '\n') {
                             line++
@@ -374,10 +376,10 @@ object PositionXmlParser {
             }
             if (pos != null) {
                 // Attempt to point forward to the actual text node
-                val startOffset: Int = pos.getOffset()
-                val endOffset: Int = pos.getEnd().getOffset()
-                var line: Int = pos.getLine()
-                var column: Int = pos.getColumn()
+                val startOffset: Int = pos.offset
+                val endOffset: Int = pos.end?.offset ?: 0
+                var line: Int = pos.line
+                var column: Int = pos.column
                 // Find attribute in the text
                 val contents = node.getOwnerDocument().getUserData(CONTENT_KEY) as String
                 if (contents == null || contents.length < endOffset) {
@@ -479,7 +481,7 @@ object PositionXmlParser {
             factory.isValidating = false
             val docBuilder = factory.newDocumentBuilder()
             document = docBuilder.newDocument()
-            document.setUserData(CONTENT_KEY, xml, null)
+            document.setUserData(CONTENT_KEY, mXml, null)
         }
 
         override fun setDocumentLocator(locator: Locator) {
@@ -537,7 +539,7 @@ object PositionXmlParser {
         @Throws(SAXException::class)
         override fun comment(chars: CharArray, start: Int, length: Int) {
             flushText()
-            val comment = kotlin.String(chars, start, length)
+            val comment = String(chars, start, length)
             val domComment = document.createComment(comment)
             // current position is the closing comment tag.
             val currentPosition = currentPosition
@@ -572,14 +574,14 @@ object PositionXmlParser {
          * @return the opening tag position or startPosition if cannot be found.
          */
         private fun findOpeningTag(startingPosition: Position): Position {
-            for (offset in startingPosition.getOffset() - 1 downTo 0) {
+            for (offset in startingPosition.offset - 1 downTo 0) {
                 val c = mXml[offset]
                 if (c == '<') {
                     // Adjust line position
-                    var line: Int = startingPosition.getLine()
+                    var line: Int = startingPosition.line
                     run {
                         var i: Int = offset
-                        val n: Int = startingPosition.getOffset()
+                        val n: Int = startingPosition.offset
                         while (i < n) {
                             if (mXml[i] == '\n') {
                                 line--
@@ -681,9 +683,9 @@ object PositionXmlParser {
             var endColumn = column
             var endOffset = offset
             if (end != null) {
-                endLine = end.getLine()
-                endColumn = end.getColumn()
-                endOffset = end.getOffset()
+                endLine = end!!.line
+                endColumn = end!!.column
+                endOffset = end!!.offset
             }
             return SourcePosition(line, column, offset, endLine, endColumn, endOffset)
         }

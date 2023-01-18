@@ -9,7 +9,9 @@ import kotlinx.coroutines.*
 import network_layer.FigmaClient
 import network_layer.models.nodes.Node
 import network_layer.repositories.FigmaRepository
+import svg_to_vector_drawable_converter.Svg2Vector
 import java.io.File
+import java.io.FileOutputStream
 import java.net.URI
 
 class LoadAndGenerateComposeIcons(
@@ -54,13 +56,17 @@ class LoadAndGenerateComposeIcons(
         try {
             imagesToDownload.map { image ->
                 GlobalScope.launch(Dispatchers.IO) {
-                    figmaClient.downloadFile(createFileUseCase.execute(
+                    val svgFile = createFileUseCase.execute(
                         CreateFileUseCase.Params(
                             "src/main/res/drawables/",
                             image.imageFileName,
                             isDirectory = false
                         )
-                    ), image.path)
+                    )
+                    figmaClient.downloadFile(svgFile, image.path)
+                    Svg2Vector.parseSvgToXml(svgFile,
+                        FileOutputStream("src/main/res/drawables/${image.assetName}.xml"))
+                    //svgFile.delete()
                 }
             }.joinAll()
         } catch (e: Throwable) {
