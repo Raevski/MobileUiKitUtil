@@ -61,8 +61,8 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
                 PropertySpec.builder(
                     color.nameForCode,
                     composeColorClass
-                ).getter(
-                    getterBuilder(color).build()
+                ).initializer(
+                    getterBuilder(color)
                 ).build()
             )
         }
@@ -70,17 +70,14 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
         return augmentedClassBuilder
     }
 
-    private fun getterBuilder(color: Color): FunSpec.Builder {
-        return FunSpec.getterBuilder()
-            .addCode("colorResource(id = R.color.${color.nameForResource})")
+    private fun getterBuilder(color: Color): String {
+        return "colorResource(id = R.color.${color.nameForResource})"
             /*.beginControlFlow("if (isSystemInDarkTheme()) {\n" +
                     "   colorResource(id = R.color.color_light_background_additional_one)\n" +
                     "   } else {\n" +
                     "   colorResource(id = R.color.color_light_background_additional_one)\n" +
                     "   }")*/
             //.endControlFlow()
-            .addAnnotation(composableAnnotationClass)
-            .addAnnotation(composableImmutableAnnotationClass)
     }
 
     private fun createXmlForColors(colors: List<Color>, resourceFilePath: String = "src/main/res/exported_colors.xml") {

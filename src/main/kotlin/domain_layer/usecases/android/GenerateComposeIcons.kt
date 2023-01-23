@@ -54,8 +54,8 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
                 PropertySpec.builder(
                     imageName,
                     composeIconClass
-                ).getter(
-                    getterBuilder(imageName).build()
+                ).initializer(
+                    initializerBuilder(imageName)
                 ).build()
             )
         }
@@ -63,10 +63,7 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
         return augmentedClassBuilder
     }
 
-    private fun getterBuilder(imageName: String): FunSpec.Builder {
-        return FunSpec.getterBuilder()
-            .addCode("Icon(painter = painterResource(id = R.drawable.${imageName}))")
-            .addAnnotation(composableAnnotationClass)
-            .addAnnotation(composableImmutableAnnotationClass)
+    private fun initializerBuilder(imageName: String): String {
+        return "Icon(painter = painterResource(id = R.drawable.${imageName}))"
     }
 }

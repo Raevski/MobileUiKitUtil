@@ -17,7 +17,7 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
         val file = FileSpec.builder(params.packageName, params.className)
             .addType(
                 addPropertiesForStyles(
-                    TypeSpec.classBuilder(params.className)
+                    TypeSpec.objectBuilder(params.className)
                         .addAnnotation(immutableAnnotationClass), params.styles).build()
 
             )
@@ -32,7 +32,7 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
     ): TypeSpec.Builder {
 
         val composeTextStyleClass = ClassName(COMPOSE_STYLE_CLASS_PACKAGE_NAME, "TextStyle")
-        val composableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME, "Composable")
+        //val composableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME, "Composable")
 
         var augmentedClassBuilder = classBuilder
 
@@ -41,18 +41,11 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
                 PropertySpec.builder(
                     style.name.replacedByToken(),
                     composeTextStyleClass
-                )
-                    .getter(
-                        FunSpec.getterBuilder()
-                            .beginControlFlow("TextStyle(\n" +
-                                    "   fontFamily = FontFamily.Default,\n" +
-                                    "   fontWeight = ${getFontWeightString(style.fontWeight)},\n" +
-                                    "   fontSize = ${style.fontSize.toInt()}.sp,\n" +
-                                    "   lineHeight = ${style.lineHeight.toInt()}.sp)")
-                            .endControlFlow()
-                            .addAnnotation(composableAnnotationClass)
-                            .build()
-                    )
+                ).initializer("TextStyle(\n" +
+                        "  fontFamily = FontFamily.Default,\n" +
+                        "  fontWeight = ${getFontWeightString(style.fontWeight)},\n" +
+                        "  fontSize = ${style.fontSize.toInt()}.sp,\n" +
+                        "  lineHeight = ${style.lineHeight.toInt()}.sp)")
                 .build()
             )
         }
