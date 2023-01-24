@@ -79,7 +79,7 @@ class LoadAndGenerateComposeIcons(
         }
 
         val generateComposeIcons = GenerateComposeIcons()
-        generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = imagesToDownload.map {it.assetName},
+        generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = imagesToDownload,
             file = params.resultFile))
     }
 

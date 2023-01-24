@@ -32,7 +32,7 @@ class LoadColorsUseCase(private val figmaRepository: FigmaRepository,
                 fill.color?.r ?: .0,
                 fill.color?.g ?: .0,
                 fill.color?.b  ?: .0,
-                fill.opacity ?: .0)
+                fill.color?.a ?: .0)
         }
     }
 

@@ -15,6 +15,7 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
     companion object {
         const val COMPOSE_COLOR_CLASS_PACKAGE_NAME = "androidx.compose.ui.graphics"
         const val ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME = "androidx.compose.runtime"
+        const val ANDROIDX_COMPOSE_COLOR_RESOURCE = "androidx.compose.ui.res"
     }
 
     data class Params(val packageName: String = "com.example.hello",
@@ -62,7 +63,7 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
                     color.nameForCode,
                     composeColorClass
                 ).initializer(
-                    getterBuilder(color)
+                    initializerBuilder(color)
                 ).build()
             )
         }
@@ -70,8 +71,8 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
         return augmentedClassBuilder
     }
 
-    private fun getterBuilder(color: Color): String {
-        return "colorResource(id = R.color.${color.nameForResource})"
+    private fun initializerBuilder(color: Color): String {
+        return "Color(red = ${color.redInt}, green = ${color.greenInt}, blue = ${color.blueInt}, alpha = ${color.alphaInt})"
             /*.beginControlFlow("if (isSystemInDarkTheme()) {\n" +
                     "   colorResource(id = R.color.color_light_background_additional_one)\n" +
                     "   } else {\n" +

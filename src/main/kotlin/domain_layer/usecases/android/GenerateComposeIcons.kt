@@ -3,6 +3,7 @@ package domain_layer.usecases.android
 import domain_layer.usecases.MobileUtilUseCase
 import java.io.File
 import com.squareup.kotlinpoet.*
+import domain_layer.models.ImageToDownload
 
 class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit> {
 
@@ -13,7 +14,7 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
 
     data class Params(val packageName: String = "com.example.hello",
                       val className: String = "Icons",
-                      val imageNames: List<String> = listOf(),
+                      val imageNames: List<ImageToDownload> = listOf(),
                       val file: File)
 
     private val composeIconClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
@@ -44,18 +45,18 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
 
     private fun addPropertiesForIcons(
         classBuilder: TypeSpec.Builder,
-        colors: List<String>
+        images: List<ImageToDownload>
     ): TypeSpec.Builder {
 
         var augmentedClassBuilder = classBuilder
 
-        colors.forEach { imageName ->
+        images.forEach { image ->
             augmentedClassBuilder = classBuilder.addProperty(
                 PropertySpec.builder(
-                    imageName,
+                    image.composeIconName(),
                     composeIconClass
                 ).initializer(
-                    initializerBuilder(imageName)
+                    initializerBuilder(image.assetName)
                 ).build()
             )
         }
