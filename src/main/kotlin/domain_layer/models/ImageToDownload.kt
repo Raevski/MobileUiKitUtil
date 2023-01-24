@@ -7,15 +7,14 @@ data class ImageToDownload(val nodeId: String,
                            val imageFileName: String,
                            val assetName: String) {
     fun composeIconName(): String {
-        val splittedWords = assetName.split("_")
-        splittedWords.forEachIndexed { index, word ->
-            return if(index > 0) {
+
+        return assetName.split("_").mapIndexed { index, word ->
+            return@mapIndexed if(index > 0) {
                 word.capitalizeAsciiOnly()
             } else {
                 word
             }
-        }
-        return splittedWords.joinToString()
+        }.joinToString("")
     }
 
 }
