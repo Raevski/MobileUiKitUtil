@@ -15,7 +15,8 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
     data class Params(val packageName: String = "com.example.hello",
                       val className: String = "Icons",
                       val imageNames: List<ImageToDownload> = listOf(),
-                      val file: File)
+                      val file: File,
+                      val showkaseEnabled: Boolean = false)
 
     private val composeIconClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
         "Icon")
@@ -36,7 +37,9 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
             .addType(
                 addPropertiesForIcons(
                     TypeSpec.objectBuilder(params.className)
-                        .addAnnotation(immutableAnnotationClass), params.imageNames).build()
+                        .addAnnotation(immutableAnnotationClass),
+                    params.imageNames,
+                    params.showkaseEnabled).build()
 
             )
         
@@ -45,19 +48,29 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
 
     private fun addPropertiesForIcons(
         classBuilder: TypeSpec.Builder,
-        images: List<ImageToDownload>
+        images: List<ImageToDownload>,
+        showkaseEnabled: Boolean = false
     ): TypeSpec.Builder {
 
         var augmentedClassBuilder = classBuilder
 
         images.forEach { image ->
+            val propertyBuilder = PropertySpec.builder(
+                image.composeIconName(),
+                composeIconClass
+            ).initializer(
+                initializerBuilder(image.assetName)
+            )
+
+            /*if (showkaseEnabled) {
+                propertyBuilder.addAnnotation(
+                    AnnotationSpec.builder(ClassName(GenerateComposeColors.SHOWKASE_PACKAGE_NAME, "ShowkaseIcon"))
+                        .addMember("\"${image.assetName}\"")
+                        .addMember("\"uikit_exported\"")
+                        .build())
+            }*/
             augmentedClassBuilder = classBuilder.addProperty(
-                PropertySpec.builder(
-                    image.composeIconName(),
-                    composeIconClass
-                ).initializer(
-                    initializerBuilder(image.assetName)
-                ).build()
+                propertyBuilder.build()
             )
         }
 

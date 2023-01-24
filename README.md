@@ -31,6 +31,7 @@ command line tool.
 - [ ] Generating IOS colors file for XCode Project
 - [ ] Generating IOS icons files for XCode Project
 - [x] Support for tokenization for styles, colors, icons names
+- [x] Suppoer for showkase from airbnb
 
 ## Config
 
@@ -48,6 +49,7 @@ MobileFigmaExportConfig {
     resourceType = "Icons"
     isLogging = true
     resultPath = "src/main/res/figma-drawables"
+    showkaseEnabled = false
     tokenization {
         "headline" to "Headline"
     }

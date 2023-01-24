@@ -10,6 +10,7 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
     companion object {
         const val COMPOSE_STYLE_CLASS_PACKAGE_NAME = "androidx.compose.ui.text"
         const val ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME = "androidx.compose.runtime"
+        const val SHOWKASE_PACKAGE_NAME = "com.airbnb.android.showkase.annotation"
     }
     override suspend fun execute(params: Params) {
         val immutableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME, "Immutable")
@@ -18,7 +19,9 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
             .addType(
                 addPropertiesForStyles(
                     TypeSpec.objectBuilder(params.className)
-                        .addAnnotation(immutableAnnotationClass), params.styles).build()
+                        .addAnnotation(immutableAnnotationClass),
+                    params.styles,
+                    params.showkaseEnabled).build()
 
             )
             .build()
@@ -28,7 +31,8 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
 
     private fun addPropertiesForStyles(
         classBuilder: TypeSpec.Builder,
-        styles: List<TextStyle>
+        styles: List<TextStyle>,
+        showkaseEnabled: Boolean = false
     ): TypeSpec.Builder {
 
         val composeTextStyleClass = ClassName(COMPOSE_STYLE_CLASS_PACKAGE_NAME, "TextStyle")
@@ -37,15 +41,23 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
         var augmentedClassBuilder = classBuilder
 
         styles.forEach { style ->
+            val propertyBuilder = PropertySpec.builder(
+                style.name.replacedByToken(),
+                composeTextStyleClass
+            ).initializer("TextStyle(\n" +
+                    "  fontFamily = FontFamily.Default,\n" +
+                    "  fontWeight = ${getFontWeightString(style.fontWeight)},\n" +
+                    "  fontSize = ${style.fontSize.toInt()}.sp,\n" +
+                    "  lineHeight = ${style.lineHeight.toInt()}.sp)")
+            if (showkaseEnabled) {
+                propertyBuilder.addAnnotation(
+                    AnnotationSpec.builder(ClassName(SHOWKASE_PACKAGE_NAME, "ShowkaseTypography"))
+                        .addMember("\"${style.name}\"")
+                        .addMember("\"uikit_exported\"")
+                        .build())
+            }
             augmentedClassBuilder = classBuilder.addProperty(
-                PropertySpec.builder(
-                    style.name.replacedByToken(),
-                    composeTextStyleClass
-                ).initializer("TextStyle(\n" +
-                        "  fontFamily = FontFamily.Default,\n" +
-                        "  fontWeight = ${getFontWeightString(style.fontWeight)},\n" +
-                        "  fontSize = ${style.fontSize.toInt()}.sp,\n" +
-                        "  lineHeight = ${style.lineHeight.toInt()}.sp)")
+                propertyBuilder
                 .build()
             )
         }
@@ -73,7 +85,8 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
     data class Params(val packageName: String = "com.example.hello",
                       val className: String = "Typography",
                       val styles: List<TextStyle> = listOf(),
-                      val file: File
+                      val file: File,
+                      val showkaseEnabled: Boolean = false
     )
 
 }

@@ -80,7 +80,8 @@ class LoadAndGenerateComposeIcons(
 
         val generateComposeIcons = GenerateComposeIcons()
         generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = imagesToDownload,
-            file = params.resultFile))
+            file = params.resultFile,
+            showkaseEnabled = params.showkaseEnabled))
     }
 
     private fun downloadPngFiles() {
@@ -91,7 +92,8 @@ class LoadAndGenerateComposeIcons(
                       val resultFile: File,
                       val pageName: String? = null,
                       val nodeId: String? = null,
-                      val resourcesPath: String = "src/main/res/drawables/")
+                      val resourcesPath: String = "src/main/res/drawables/",
+                      val showkaseEnabled: Boolean = false)
 }
 
 fun getFileNameFromNode(imagePath: String, nodes: Map<String, Node>, imagesMeta: Map<String, String>): String {

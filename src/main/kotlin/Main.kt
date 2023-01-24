@@ -35,17 +35,26 @@ fun main(args: Array<String>) {
     when(params.resourceType) {
         ExportResourceType.TYPOGRAPHY -> {
             val loadAndGenerateComposeStyles = LoadAndGenerateComposeStyles(repository)
-            loadAndGenerateComposeStyles.executeBlocking(LoadAndGenerateComposeStyles.Params(params.fileHash, file))
+            loadAndGenerateComposeStyles.executeBlocking(
+                LoadAndGenerateComposeStyles.Params(params.fileHash,
+                    file,
+                    showkaseEnabled = params.showkaseEnabled))
         }
 
         ExportResourceType.COLORS -> {
             val loadAndGenerateComposeColors = LoadAndGenerateComposeColors(repository)
-            loadAndGenerateComposeColors.executeBlocking(LoadAndGenerateComposeColors.Params(params.fileHash, file))
+            loadAndGenerateComposeColors.executeBlocking(
+                LoadAndGenerateComposeColors.Params(params.fileHash,
+                    file,
+                    params.showkaseEnabled))
         }
 
         ExportResourceType.ICONS -> {
             val loadAndGenerateComposeIcons = LoadAndGenerateComposeIcons(repository, figmaClient)
-            loadAndGenerateComposeIcons.executeBlocking(LoadAndGenerateComposeIcons.Params(params.fileHash, file))
+            loadAndGenerateComposeIcons.executeBlocking(
+                LoadAndGenerateComposeIcons.Params(params.fileHash,
+                    file,
+                    showkaseEnabled = params.showkaseEnabled))
         }
     }
 

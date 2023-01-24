@@ -16,12 +16,14 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
         const val COMPOSE_COLOR_CLASS_PACKAGE_NAME = "androidx.compose.ui.graphics"
         const val ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME = "androidx.compose.runtime"
         const val ANDROIDX_COMPOSE_COLOR_RESOURCE = "androidx.compose.ui.res"
+        const val SHOWKASE_PACKAGE_NAME = "com.airbnb.android.showkase.annotation"
     }
 
     data class Params(val packageName: String = "com.example.hello",
-                      val className: String = "Сolors",
+                      val className: String = "Colors",
                       val colors: List<Color> = listOf(),
-                      val file: File)
+                      val file: File,
+                      val showkaseEnabled: Boolean = false)
 
     private val composeColorClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
         "Color")
@@ -43,7 +45,9 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
             .addType(
                 addPropertiesForColors(
                     TypeSpec.objectBuilder(params.className)
-                        .addAnnotation(immutableAnnotationClass), params.colors).build()
+                        .addAnnotation(immutableAnnotationClass),
+                    params.colors,
+                    params.showkaseEnabled).build()
 
             )
         
@@ -52,19 +56,28 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
 
     private fun addPropertiesForColors(
         classBuilder: TypeSpec.Builder,
-        colors: List<Color>
+        colors: List<Color>,
+        showkaseEnabled: Boolean = false
     ): TypeSpec.Builder {
 
         var augmentedClassBuilder = classBuilder
 
         colors.forEach { color ->
+            val propertyBuilder = PropertySpec.builder(
+                color.nameForCode,
+                composeColorClass
+            ).initializer(
+                initializerBuilder(color)
+            )
+            if (showkaseEnabled) {
+                propertyBuilder.addAnnotation(
+                    AnnotationSpec.builder(ClassName(SHOWKASE_PACKAGE_NAME, "ShowkaseColor"))
+                        .addMember("\"${color.name}\"")
+                        .addMember("\"uikit_exported\"")
+                        .build())
+            }
             augmentedClassBuilder = classBuilder.addProperty(
-                PropertySpec.builder(
-                    color.nameForCode,
-                    composeColorClass
-                ).initializer(
-                    initializerBuilder(color)
-                ).build()
+                propertyBuilder.build()
             )
         }
 

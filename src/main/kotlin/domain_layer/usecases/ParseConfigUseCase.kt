@@ -31,6 +31,7 @@ class ParseConfigUseCase : MobileUtilUseCase<ParseConfigUseCase.Params, UtilPara
             config.isLogging,
             config.resultPath,
             config.nodeId,
-            config.pageName)
+            config.pageName,
+            config.showkaseEnabled)
     }
 }

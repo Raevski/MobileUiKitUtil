@@ -14,6 +14,7 @@ class MobileFigmaExportConfig {
     var resultPath: String = ""
     var nodeId: String = ""
     var pageName: String = ""
+    var showkaseEnabled: Boolean = false
     val tokenizationBuilder = TokenizationBuilder()
 
     val targetPlatform: Platform
@@ -34,7 +35,8 @@ class MobileFigmaExportConfig {
                 isLogging: Boolean = true,
                 resultPath: String = "",
                 nodeId: String = "",
-                pageName: String = "") {
+                pageName: String = "",
+                showkaseEnabled: Boolean = false) {
         this.figmaToken = figmaToken
         this.platform = platform.platformString
         this.resourceType = resourceType.resourceTypeString
@@ -43,6 +45,7 @@ class MobileFigmaExportConfig {
         this.resultPath = resultPath
         this.nodeId = nodeId
         this.pageName = pageName
+        this.showkaseEnabled = showkaseEnabled
     }
 
     constructor(initializer: MobileFigmaExportConfig.() -> Unit) {

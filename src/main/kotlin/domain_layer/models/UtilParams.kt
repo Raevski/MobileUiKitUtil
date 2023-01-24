@@ -8,7 +8,8 @@ data class UtilParams(
     val isLogging: Boolean,
     val resultPath: String,
     val nodeId: String,
-    val pageName: String
+    val pageName: String,
+    val showkaseEnabled: Boolean
 ) {
     companion object {
 
@@ -33,7 +34,15 @@ data class UtilParams(
                 isLogging = isLoggingParam.toBoolean()
             }
 
-            return UtilParams(platform, resourceType, figmaToken, fileHash, isLogging, filePath, nodeId, pageName)
+            return UtilParams(platform,
+                resourceType,
+                figmaToken,
+                fileHash,
+                isLogging,
+                filePath,
+                nodeId,
+                pageName,
+                false)
         }
     }
 }
