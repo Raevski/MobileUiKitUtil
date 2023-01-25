@@ -13,7 +13,7 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
     }
 
     data class Params(val packageName: String = "com.example.hello",
-                      val className: String = "Icons",
+                      val resultClassName: String = "Icons",
                       val imageNames: List<ImageToDownload> = listOf(),
                       val file: File,
                       val showkaseEnabled: Boolean = false)
@@ -33,10 +33,10 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
         val immutableAnnotationClass = ClassName(GenerateComposeTypography.ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME,
             "Immutable")
 
-        val builder = FileSpec.builder(params.packageName, params.className)
+        val builder = FileSpec.builder(params.packageName, params.resultClassName)
             .addType(
                 addPropertiesForIcons(
-                    TypeSpec.objectBuilder(params.className)
+                    TypeSpec.objectBuilder(params.resultClassName)
                         .addAnnotation(immutableAnnotationClass),
                     params.imageNames,
                     params.showkaseEnabled).build()

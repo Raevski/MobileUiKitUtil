@@ -15,6 +15,8 @@ class MobileFigmaExportConfig {
     var nodeId: String = ""
     var pageName: String = ""
     var showkaseEnabled: Boolean = false
+    var resultClassName: String = ""
+    var resultPackageName: String = ""
     val tokenizationBuilder = TokenizationBuilder()
 
     val targetPlatform: Platform
@@ -36,7 +38,9 @@ class MobileFigmaExportConfig {
                 resultPath: String = "",
                 nodeId: String = "",
                 pageName: String = "",
-                showkaseEnabled: Boolean = false) {
+                showkaseEnabled: Boolean = false,
+                resultClassName: String,
+                resultPackageName: String) {
         this.figmaToken = figmaToken
         this.platform = platform.platformString
         this.resourceType = resourceType.resourceTypeString
@@ -46,6 +50,8 @@ class MobileFigmaExportConfig {
         this.nodeId = nodeId
         this.pageName = pageName
         this.showkaseEnabled = showkaseEnabled
+        this.resultClassName = resultClassName
+        this.resultPackageName = resultPackageName
     }
 
     constructor(initializer: MobileFigmaExportConfig.() -> Unit) {

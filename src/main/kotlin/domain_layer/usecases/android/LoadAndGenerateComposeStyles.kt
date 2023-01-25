@@ -14,10 +14,14 @@ class LoadAndGenerateComposeStyles(private val figmaRepository: FigmaRepository
         val generateComposeTypography = GenerateComposeTypography()
         generateComposeTypography.execute(GenerateComposeTypography.Params(styles = styles,
             file = params.resultFile,
-            showkaseEnabled = params.showkaseEnabled))
+            showkaseEnabled = params.showkaseEnabled,
+            resultClassName = params.resultClassName,
+            packageName = params.resultPackageName))
     }
 
     data class Params(val figmaFileHash: String,
                       val resultFile: File,
-                      val showkaseEnabled: Boolean = false)
+                      val showkaseEnabled: Boolean = false,
+                      val resultClassName: String = "Typography",
+                      val resultPackageName: String = "com.example.hello")
 }

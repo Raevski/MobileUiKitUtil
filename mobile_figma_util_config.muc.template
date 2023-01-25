@@ -1,13 +1,15 @@
 MobileFigmaExportConfig {
-    figmaToken = "here should be your token"
-    fileHash = "here should be your figma layout file hash"
-    nodeId = "17:187"
-    pageName = "Icons"
+    figmaToken = "Your figma API token"
+    fileHash = "Your file hash here"
+    nodeId = "Specific node id if you need"
+    pageName = "Specific page name if you need"
     platform = "android"
-    resourceType = "Icons"
+    resourceType = "Typography"
     isLogging = true
-    resultPath = "src/main/res/figma-drawables"
-    showkaseEnabled = true
+    resultPath = "src/main/res"
+    showkaseEnabled = true// If you need airbnb showkase library support https://github.com/airbnb/Showkase
+    resultClassName = "CustomTypography"
+    resultPackageName = "com.hello.example.uikit.base_components.exported"
     tokenization {
         "headline" to "Headline"
     }

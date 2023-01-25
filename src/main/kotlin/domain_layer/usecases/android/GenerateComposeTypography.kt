@@ -15,15 +15,17 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
     override suspend fun execute(params: Params) {
         val immutableAnnotationClass = ClassName(ANDROIDX_COMPOSE_ANNOTATION_PACKAGE_NAME, "Immutable")
 
-        val file = FileSpec.builder(params.packageName, params.className)
+        val file = FileSpec.builder(params.packageName, params.resultClassName)
             .addType(
                 addPropertiesForStyles(
-                    TypeSpec.objectBuilder(params.className)
+                    TypeSpec.classBuilder(params.resultClassName)
                         .addAnnotation(immutableAnnotationClass),
                     params.styles,
                     params.showkaseEnabled).build()
 
             )
+            .addImport("androidx.compose.ui.unit", "sp")
+            .addImport("androidx.compose.ui.text.font", "FontWeight", "FontFamily")
             .build()
 
         file.writeTo(params.file)
@@ -83,10 +85,10 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
     }
 
     data class Params(val packageName: String = "com.example.hello",
-                      val className: String = "Typography",
                       val styles: List<TextStyle> = listOf(),
                       val file: File,
-                      val showkaseEnabled: Boolean = false
+                      val showkaseEnabled: Boolean = false,
+                      val resultClassName: String = "Typography"
     )
 
 }

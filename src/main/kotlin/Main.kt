@@ -38,7 +38,9 @@ fun main(args: Array<String>) {
             loadAndGenerateComposeStyles.executeBlocking(
                 LoadAndGenerateComposeStyles.Params(params.fileHash,
                     file,
-                    showkaseEnabled = params.showkaseEnabled))
+                    showkaseEnabled = params.showkaseEnabled,
+                    params.resultClassName,
+                    resultPackageName = params.resultPackageName))
         }
 
         ExportResourceType.COLORS -> {
@@ -46,7 +48,9 @@ fun main(args: Array<String>) {
             loadAndGenerateComposeColors.executeBlocking(
                 LoadAndGenerateComposeColors.Params(params.fileHash,
                     file,
-                    params.showkaseEnabled))
+                    params.showkaseEnabled,
+                    params.resultClassName,
+                    resultPackageName = params.resultPackageName))
         }
 
         ExportResourceType.ICONS -> {
@@ -54,7 +58,9 @@ fun main(args: Array<String>) {
             loadAndGenerateComposeIcons.executeBlocking(
                 LoadAndGenerateComposeIcons.Params(params.fileHash,
                     file,
-                    showkaseEnabled = params.showkaseEnabled))
+                    showkaseEnabled = params.showkaseEnabled,
+                    resultClassName = params.resultClassName,
+                    resultPackageName = params.resultPackageName))
         }
     }
 

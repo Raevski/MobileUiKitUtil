@@ -9,7 +9,9 @@ data class UtilParams(
     val resultPath: String,
     val nodeId: String,
     val pageName: String,
-    val showkaseEnabled: Boolean
+    val showkaseEnabled: Boolean,
+    val resultClassName: String,
+    val resultPackageName: String
 ) {
     companion object {
 
@@ -25,13 +27,20 @@ data class UtilParams(
             val filePath = args.get(5).orEmpty()
             val nodeId = args.get(6).orEmpty()
             val pageName = args.get(7).orEmpty()
+            val showkaseEnabledParam = args.get(8).orEmpty()
+            val resultClassName = args.get(9).orEmpty()
+            val resultPackageName = args.get(10).orEmpty()
 
-            var isLogging = false
-
-            if (isLoggingParam.isEmpty()) {
-                isLogging = false
+            val isLogging = if (isLoggingParam.isEmpty()) {
+                false
             } else {
-                isLogging = isLoggingParam.toBoolean()
+                isLoggingParam.toBoolean()
+            }
+
+            val showkaseEnabled = if (showkaseEnabledParam.isEmpty()) {
+                false
+            }  else {
+                showkaseEnabledParam.toBoolean()
             }
 
             return UtilParams(platform,
@@ -42,7 +51,9 @@ data class UtilParams(
                 filePath,
                 nodeId,
                 pageName,
-                false)
+                showkaseEnabled,
+                resultClassName,
+                resultPackageName)
         }
     }
 }

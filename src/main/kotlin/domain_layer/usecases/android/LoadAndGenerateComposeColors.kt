@@ -14,10 +14,14 @@ class LoadAndGenerateComposeColors(private val figmaRepository: FigmaRepository
         val generateComposeColorsUseCase = GenerateComposeColors()
         generateComposeColorsUseCase.execute(GenerateComposeColors.Params(colors = colors,
             file = params.resultFile,
-            showkaseEnabled = params.showkaseEnabled))
+            showkaseEnabled = params.showkaseEnabled,
+            resultClassName = params.resultClassName,
+            packageName = params.resultPackageName))
     }
 
     data class Params(val figmaFileHash: String,
                       val resultFile: File,
-                      val showkaseEnabled: Boolean)
+                      val showkaseEnabled: Boolean,
+                      val resultClassName: String = "Colors",
+                      val resultPackageName: String = "com.example.hello")
 }
