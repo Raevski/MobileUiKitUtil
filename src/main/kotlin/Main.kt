@@ -27,7 +27,7 @@ fun main(args: Array<String>) {
     val createFileUseCase = CreateFileUseCase()
     val file = createFileUseCase.executeBlocking(
         CreateFileUseCase.Params(
-            params.resultPath,
+            "",
             "${params.resourceType.resourceTypeString}.kt"
         )
     )
@@ -57,7 +57,8 @@ fun main(args: Array<String>) {
             val loadAndGenerateComposeIcons = LoadAndGenerateComposeIcons(repository, figmaClient)
             loadAndGenerateComposeIcons.executeBlocking(
                 LoadAndGenerateComposeIcons.Params(params.fileHash,
-                    file,
+                    resourcesPath = params.resultPath,
+                    resultFile = file,
                     showkaseEnabled = params.showkaseEnabled,
                     resultClassName = params.resultClassName,
                     resultPackageName = params.resultPackageName))

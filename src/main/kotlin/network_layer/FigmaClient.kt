@@ -65,10 +65,17 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
 
     suspend fun getImages(fileId: String,
                           format: String,
-                          ids: List<String>): HttpResponse {
-        return makeRequest(listOf("images", fileId),
-            mapOf("ids" to ids,
-                "format" to listOf(format)))
+                          ids: List<String>,
+                          scale: String = ""): HttpResponse {
+        val paramsMap = mutableMapOf("ids" to ids,
+            "format" to listOf(format))
+
+        if (scale.isNotEmpty()) {
+            paramsMap["scale"] = listOf(scale)
+        }
+
+        return makeRequest(listOf("images", fileId), paramsMap)
+
     }
 
     suspend fun getComponents(fileId: String): HttpResponse {

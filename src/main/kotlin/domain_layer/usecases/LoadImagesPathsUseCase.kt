@@ -30,11 +30,14 @@ class LoadImagesPathsUseCase (private val figmaRepository: FigmaRepository,
         if (result.size < params.nodeIds.size) {
             result.putAll(figmaRepository.getImages(fileId,
                 params.nodeIds.slice(pageEnd until params.nodeIds.size),
-                params.format).images)
+                params.format,
+                params.scale).images)
         }
 
         return result
     }
 
-    data class Params(val format: String, val nodeIds: List<String> = listOf())
+    data class Params(val format: String,
+                      val nodeIds: List<String> = listOf(),
+                      val scale: String = "")
 }
