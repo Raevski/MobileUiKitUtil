@@ -6,7 +6,8 @@ data class UtilParams(
     val figmaToken: String,
     val fileHash: String,
     val isLogging: Boolean,
-    val resultPath: String,
+    val resourcesResultPath: String,
+    val classesResultPath: String,
     val nodeId: String,
     val pageName: String,
     val showkaseEnabled: Boolean,
@@ -24,12 +25,13 @@ data class UtilParams(
             val platform = args.getOrElse(2) { "" }.getPlatform()
             val resourceType = args.getOrElse(3) { "" }.getExportResourceType()
             val isLoggingParam = args.get(4).orEmpty()
-            val filePath = args.get(5).orEmpty()
+            val resourcesfilePath = args.get(5).orEmpty()
             val nodeId = args.get(6).orEmpty()
             val pageName = args.get(7).orEmpty()
             val showkaseEnabledParam = args.get(8).orEmpty()
             val resultClassName = args.get(9).orEmpty()
             val resultPackageName = args.get(10).orEmpty()
+            val classesResultPath = args.get(11).orEmpty()
 
             val isLogging = if (isLoggingParam.isEmpty()) {
                 false
@@ -48,7 +50,8 @@ data class UtilParams(
                 figmaToken,
                 fileHash,
                 isLogging,
-                filePath,
+                resourcesfilePath,
+                classesResultPath,
                 nodeId,
                 pageName,
                 showkaseEnabled,

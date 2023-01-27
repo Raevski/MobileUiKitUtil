@@ -11,7 +11,8 @@ class MobileFigmaExportConfig {
     var resourceType: String = ""
     var fileHash: String = ""
     var isLogging: Boolean = true
-    var resultPath: String = ""
+    var resourcesResultPath: String = ""
+    var classesResultPath: String = ""
     var nodeId: String = ""
     var pageName: String = ""
     var showkaseEnabled: Boolean = false
@@ -35,18 +36,20 @@ class MobileFigmaExportConfig {
                 resourceType: ExportResourceType = ExportResourceType.TYPOGRAPHY,
                 fileHash: String = "",
                 isLogging: Boolean = true,
-                resultPath: String = "",
+                resourcesResultPath: String = "",
                 nodeId: String = "",
                 pageName: String = "",
                 showkaseEnabled: Boolean = false,
                 resultClassName: String,
-                resultPackageName: String) {
+                resultPackageName: String,
+                classesResultPath: String) {
         this.figmaToken = figmaToken
         this.platform = platform.platformString
         this.resourceType = resourceType.resourceTypeString
         this.fileHash = fileHash
         this.isLogging = isLogging
-        this.resultPath = resultPath
+        this.resourcesResultPath = resourcesResultPath
+        this.classesResultPath = classesResultPath
         this.nodeId = nodeId
         this.pageName = pageName
         this.showkaseEnabled = showkaseEnabled

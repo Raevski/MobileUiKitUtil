@@ -1,6 +1,5 @@
 import domain_layer.models.ExportResourceType
 import domain_layer.usecases.CreateFileUseCase
-import domain_layer.usecases.LoadColorsUseCase
 import domain_layer.usecases.ParseConfigUseCase
 import domain_layer.usecases.android.LoadAndGenerateComposeColors
 import domain_layer.usecases.android.LoadAndGenerateComposeIcons
@@ -27,8 +26,9 @@ fun main(args: Array<String>) {
     val createFileUseCase = CreateFileUseCase()
     val file = createFileUseCase.executeBlocking(
         CreateFileUseCase.Params(
+            params.classesResultPath,
             "",
-            "${params.resourceType.resourceTypeString}.kt"
+            true
         )
     )
 
@@ -40,7 +40,8 @@ fun main(args: Array<String>) {
                     file,
                     showkaseEnabled = params.showkaseEnabled,
                     params.resultClassName,
-                    resultPackageName = params.resultPackageName))
+                    resultPackageName = params.resultPackageName,
+                    resourcesResultPath = params.resourcesResultPath))
         }
 
         ExportResourceType.COLORS -> {
@@ -50,14 +51,15 @@ fun main(args: Array<String>) {
                     file,
                     params.showkaseEnabled,
                     params.resultClassName,
-                    resultPackageName = params.resultPackageName))
+                    resultPackageName = params.resultPackageName,
+                    resourcesResultPath = params.resourcesResultPath))
         }
 
         ExportResourceType.ICONS -> {
             val loadAndGenerateComposeIcons = LoadAndGenerateComposeIcons(repository, figmaClient)
             loadAndGenerateComposeIcons.executeBlocking(
                 LoadAndGenerateComposeIcons.Params(params.fileHash,
-                    resourcesPath = params.resultPath,
+                    resourcesPath = params.resourcesResultPath,
                     resultFile = file,
                     showkaseEnabled = params.showkaseEnabled,
                     resultClassName = params.resultClassName,

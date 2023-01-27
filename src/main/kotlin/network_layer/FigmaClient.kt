@@ -2,6 +2,7 @@ package network_layer
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
@@ -17,6 +18,13 @@ import java.io.File
 
 class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
                   private val figmaToken: String = "") {
+
+    private val dedicatedClient = HttpClient(CIO) {
+        install(HttpTimeout) {
+            requestTimeoutMillis = 3000
+        }
+    }
+
     private val client: HttpClient = HttpClient(CIO) {
         install(Logging) {
             logger = Logger.DEFAULT
@@ -84,7 +92,7 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
 
     @OptIn(InternalAPI::class)
     suspend fun downloadFile(file: File, url: String) {
-        val call = client.get {
+        val call = dedicatedClient.get {
             url(url)
             method = HttpMethod.Get
         }
@@ -93,10 +101,11 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
             return
         }
         call.content.copyAndClose(file.writeChannel())
-        println("Successfully download of icons")
+        println("Successfully download of icon $url")
     }
 
     fun clean() {
         client.close()
+        dedicatedClient.close()
     }
 }

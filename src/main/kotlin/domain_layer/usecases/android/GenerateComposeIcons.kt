@@ -16,7 +16,8 @@ class GenerateComposeIcons: MobileUtilUseCase<GenerateComposeIcons.Params, Unit>
                       val resultClassName: String = "Icons",
                       val imageNames: List<ImageToDownload> = listOf(),
                       val file: File,
-                      val showkaseEnabled: Boolean = false)
+                      val showkaseEnabled: Boolean = false,
+                      val resourcesResultPath: String = "src/main/res/")
 
     private val composeIconClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
         "Icon")

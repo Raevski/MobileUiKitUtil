@@ -23,7 +23,8 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
                       val colors: List<Color> = listOf(),
                       val file: File,
                       val showkaseEnabled: Boolean = false,
-                      val resultClassName: String = "Colors")
+                      val resultClassName: String = "Colors",
+                      val resourcesResultPath: String = "src/main/res/")
 
     private val composeColorClass = ClassName(COMPOSE_COLOR_CLASS_PACKAGE_NAME,
         "Color")
@@ -33,7 +34,7 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
         "ReadOnlyComposable")
 
     override suspend fun execute(params: Params) {
-        createXmlForColors(params.colors)
+        createXmlForColors(params.colors, params.resourcesResultPath + "exported_colors.xml")
         createComposeClasses(params)
     }
 
@@ -94,7 +95,7 @@ class GenerateComposeColors: MobileUtilUseCase<GenerateComposeColors.Params, Uni
             //.endControlFlow()
     }
 
-    private fun createXmlForColors(colors: List<Color>, resourceFilePath: String = "src/main/res/exported_colors.xml") {
+    private fun createXmlForColors(colors: List<Color>, resourceFilePath: String = "exported_colors.xml") {
         val documentBuilderFactory = DocumentBuilderFactory.newInstance()
         val documentBuilder = documentBuilderFactory.newDocumentBuilder()
         val document = documentBuilder.newDocument()

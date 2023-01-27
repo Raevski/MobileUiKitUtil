@@ -23,5 +23,6 @@ class LoadAndGenerateComposeColors(private val figmaRepository: FigmaRepository
                       val resultFile: File,
                       val showkaseEnabled: Boolean,
                       val resultClassName: String = "Colors",
-                      val resultPackageName: String = "com.example.hello")
+                      val resultPackageName: String = "com.example.hello",
+                      val resourcesResultPath: String = "")
 }

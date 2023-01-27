@@ -88,7 +88,8 @@ class GenerateComposeTypography : MobileUtilUseCase<GenerateComposeTypography.Pa
                       val styles: List<TextStyle> = listOf(),
                       val file: File,
                       val showkaseEnabled: Boolean = false,
-                      val resultClassName: String = "Typography"
+                      val resultClassName: String = "Typography",
+                      val resourcesResultPath: String = "src/main/res/"
     )
 
 }

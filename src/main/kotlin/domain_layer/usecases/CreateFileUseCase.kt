@@ -3,6 +3,8 @@ package domain_layer.usecases
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
 
 class CreateFileUseCase: MobileUtilUseCase<CreateFileUseCase.Params, File> {
     data class Params(val path: String,
@@ -10,26 +12,28 @@ class CreateFileUseCase: MobileUtilUseCase<CreateFileUseCase.Params, File> {
                       val isDirectory: Boolean = true)
 
     override suspend fun execute(params: Params): File {
-        val fileName = "./${params.path}"
+        val fullPath = "${params.path}${params.fileName}"
 
-        println("File path is $fileName")
+        println("File path is $fullPath")
 
         if (!params.isDirectory) {
-            val directory = File(fileName)
+            val file = File(fullPath)
 
-            if (!directory.isDirectory) {
-                Files.createDirectory(Paths.get(fileName)).toFile()
+            if (!file.isFile) {
+                Path(params.path).createDirectories()
+                File(fullPath).createNewFile()
             }
 
-            return File(fileName + params.fileName)
+            return File(fullPath)
         }
 
-        val directory = File(fileName)
+        val directory = File(fullPath)
 
         return if (directory.isDirectory) {
             directory
         } else {
-            Files.createDirectory(Paths.get(fileName)).toFile()
+            Path(fullPath).createDirectories()
+            File(fullPath)
         }
     }
 }

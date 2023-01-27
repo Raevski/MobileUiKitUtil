@@ -6,7 +6,8 @@ MobileFigmaExportConfig {
     platform = "android"
     resourceType = "Typography"
     isLogging = true
-    resultPath = "src/main/res"
+    resourcesResultPath = "src/main/res/"
+    classesResultPath = "src/main/kotlin"
     showkaseEnabled = true// If you need airbnb showkase library support https://github.com/airbnb/Showkase
     resultClassName = "CustomTypography"
     resultPackageName = "com.hello.example.uikit.base_components.exported"

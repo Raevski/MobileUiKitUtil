@@ -13,11 +13,14 @@ import svg_to_vector_drawable_converter.Svg2Vector
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URI
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.io.path.Path
+import kotlin.io.path.deleteIfExists
 
 class LoadAndGenerateComposeIcons(
     private val figmaRepository: FigmaRepository,
     private val figmaClient: FigmaClient
-): MobileUtilUseCase<LoadAndGenerateComposeIcons.Params, Unit> {
+) : MobileUtilUseCase<LoadAndGenerateComposeIcons.Params, Unit> {
     private val createFileUseCase = CreateFileUseCase()
 
     companion object {
@@ -26,8 +29,10 @@ class LoadAndGenerateComposeIcons(
             "1.5" to "drawable-hdpi",
             "2" to "drawable-xhdpi",
             "3" to "drawable-xxhdpi",
-            "4" to "drawable-xxxhdpi")
+            "4" to "drawable-xxxhdpi"
+        )
     }
+
     override suspend fun execute(params: Params) {
         var components = LoadComponents(figmaRepository, params.figmaFileHash).execute(null)
 
@@ -57,26 +62,34 @@ class LoadAndGenerateComposeIcons(
         val imagesMeta = loadImagesPath.execute(LoadImagesPathsUseCase.Params("svg", componentsNodes))
 
         val imagesToDownload = components.map { component ->
-            ImageToDownload(component.nodeId, imagesMeta[component.nodeId].orEmpty(),
+            ImageToDownload(
+                component.nodeId, imagesMeta[component.nodeId].orEmpty(),
                 component.svgName,
-                component.clearedName)
+                component.clearedName
+            )
         }
 
         try {
-            downloadFiles(imagesToDownload,
+            downloadFiles(
+                imagesToDownload,
                 params.resourcesPath,
                 params.figmaFileHash,
-                componentsNodes)
+                componentsNodes
+            )
         } catch (e: Throwable) {
             println("Failed loading")
         }
 
         val generateComposeIcons = GenerateComposeIcons()
-        generateComposeIcons.execute(GenerateComposeIcons.Params(imageNames = imagesToDownload,
-            file = params.resultFile,
-            showkaseEnabled = params.showkaseEnabled,
-            resultClassName = params.resultClassName,
-            packageName = params.resultPackageName))
+        generateComposeIcons.execute(
+            GenerateComposeIcons.Params(
+                imageNames = imagesToDownload,
+                file = params.resultFile,
+                showkaseEnabled = params.showkaseEnabled,
+                resultClassName = params.resultClassName,
+                packageName = params.resultPackageName
+            )
+        )
     }
 
     private suspend fun downloadFiles(
@@ -85,6 +98,8 @@ class LoadAndGenerateComposeIcons(
         figmaFileHash: String,
         componentsNodes: List<String>
     ) {
+        val failedToConvertToVectorDrawableImages = mutableListOf<ImageToDownload>()
+        val filesToDelete = mutableListOf<String>()
         imagesToDownload.map { image ->
             GlobalScope.launch(Dispatchers.IO) {
                 val svgFile = createFileUseCase.execute(
@@ -94,44 +109,76 @@ class LoadAndGenerateComposeIcons(
                         isDirectory = false
                     )
                 )
-                figmaClient.downloadFile(svgFile, image.path)
-                val errors = Svg2Vector.parseSvgToXml(svgFile,
-                    FileOutputStream("${resourcesPath}/drawable/${image.assetName}.xml"))
-                if (errors.isNullOrEmpty()) {
-                    File("${resourcesPath}${image.imageFileName}").delete()
-                } else {
-                    File("${resourcesPath}${image.assetName}.xml").delete()
-                    downloadPngFiles(figmaFileHash, componentsNodes, image, resourcesPath)
+                try {
+                    figmaClient.downloadFile(svgFile, image.path)
+                } catch (e: Exception) {
+                    svgFile.delete()
                 }
+
+                val errors = Svg2Vector.parseSvgToXml(
+                    svgFile,
+                    FileOutputStream("${resourcesPath}/drawable/${image.assetName}.xml")
+                )
+                if (!errors.isNullOrEmpty()) {
+                    filesToDelete.add("${resourcesPath}/drawable/${image.assetName}.xml")
+                    failedToConvertToVectorDrawableImages.add(image)
+                }
+                filesToDelete.add("${resourcesPath}/drawable/${image.imageFileName}")
+            }
+        }.joinAll()
+
+        downloadRasterFiles(figmaFileHash, failedToConvertToVectorDrawableImages, resourcesPath)
+
+        filesToDelete.forEach {
+            Path(it).deleteIfExists()
+            println("File $it deleted")
+        }
+    }
+
+    private suspend fun downloadRasterFiles(
+        figmaFileHash: String,
+        images: List<ImageToDownload>,
+        resourcesPath: String
+    ) {
+        val loadImagesPath = LoadImagesPathsUseCase(figmaRepository, figmaFileHash)
+
+        var currentCount = AtomicInteger(0)
+        val totalCount = images.size * scalesWithDirectories.size
+        scalesWithDirectories.map { scaleWithDirectory ->
+            GlobalScope.launch(Dispatchers.IO) {
+                val nodeIdWithImagePaths = loadImagesPath.execute(
+                    LoadImagesPathsUseCase.Params("png", images.map { it.nodeId }, scaleWithDirectory.key)
+                )
+
+                nodeIdWithImagePaths.map { nodeWithImagePath ->
+                    launch(Dispatchers.IO) {
+                        figmaClient.downloadFile(
+                            createFileUseCase.execute(
+                                CreateFileUseCase.Params(
+                                    "${resourcesPath}/${scaleWithDirectory.value}/",
+                                    images.find { it.nodeId == nodeWithImagePath.key }!!.assetName + ".png",
+                                    isDirectory = false
+                                )
+                            ), nodeWithImagePath.value
+                        )
+                        currentCount.getAndAdd(1)
+                        println("Downloaded file ${currentCount.get()} from $totalCount total")
+                    }
+                }.joinAll()
             }
         }.joinAll()
     }
 
-    private suspend fun downloadPngFiles(
-        figmaFileHash: String,
-        componentsNodes: List<String>,
-        image: ImageToDownload,
-        resourcesPath: String) {
-        scalesWithDirectories.forEach {
-            val loadImagesPath = LoadImagesPathsUseCase(figmaRepository, figmaFileHash)
-            val nodeIdWithImagePath = loadImagesPath.execute(
-                LoadImagesPathsUseCase.Params("png", componentsNodes.filter { it == image.nodeId } ,it.key))
-            figmaClient.downloadFile(createFileUseCase.execute(CreateFileUseCase.Params(
-                "${resourcesPath}/${it.value}/",
-                image.assetName + ".png",
-                isDirectory = false
-            )), nodeIdWithImagePath.values.firstOrNull().orEmpty())
-        }
-    }
-
-    data class Params(val figmaFileHash: String,
-                      val resultFile: File,
-                      val pageName: String? = null,
-                      val nodeId: String? = null,
-                      val resourcesPath: String = "src/main/res/drawables/",
-                      val showkaseEnabled: Boolean = false,
-                      val resultClassName: String = "Icons",
-                      val resultPackageName: String = "com.example.hello")
+    data class Params(
+        val figmaFileHash: String,
+        val resultFile: File,
+        val pageName: String? = null,
+        val nodeId: String? = null,
+        val resourcesPath: String = "src/main/res",
+        val showkaseEnabled: Boolean = false,
+        val resultClassName: String = "Icons",
+        val resultPackageName: String = "com.example.hello"
+    )
 }
 
 fun getFileNameFromNode(imagePath: String, nodes: Map<String, Node>, imagesMeta: Map<String, String>): String {

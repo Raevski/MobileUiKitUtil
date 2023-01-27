@@ -23,5 +23,6 @@ class LoadAndGenerateComposeStyles(private val figmaRepository: FigmaRepository
                       val resultFile: File,
                       val showkaseEnabled: Boolean = false,
                       val resultClassName: String = "Typography",
-                      val resultPackageName: String = "com.example.hello")
+                      val resultPackageName: String = "com.example.hello",
+                      val resourcesResultPath: String = "")
 }
