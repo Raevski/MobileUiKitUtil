@@ -19,9 +19,9 @@ import java.io.File
 class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
                   private val figmaToken: String = "") {
 
-    private val dedicatedClient = HttpClient(CIO) {
+    private val fileDownloaderClient = HttpClient(CIO) {
         install(HttpTimeout) {
-            requestTimeoutMillis = 3000
+            requestTimeoutMillis = 13000
         }
     }
 
@@ -92,7 +92,7 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
 
     @OptIn(InternalAPI::class)
     suspend fun downloadFile(file: File, url: String) {
-        val call = dedicatedClient.get {
+        val call = fileDownloaderClient.get {
             url(url)
             method = HttpMethod.Get
         }
@@ -106,6 +106,6 @@ class FigmaClient(private val baseUrl: String = NetworkConsts.FIGMA_API_URL,
 
     fun clean() {
         client.close()
-        dedicatedClient.close()
+        fileDownloaderClient.close()
     }
 }

@@ -22,6 +22,8 @@ class LoadAndGenerateComposeIcons(
     private val figmaClient: FigmaClient
 ) : MobileUtilUseCase<LoadAndGenerateComposeIcons.Params, Unit> {
     private val createFileUseCase = CreateFileUseCase()
+    private var currentCount = AtomicInteger(0)
+    private var totalCount = 0
 
     companion object {
         val scalesWithDirectories = mapOf(
@@ -131,7 +133,6 @@ class LoadAndGenerateComposeIcons(
 
         filesToDelete.forEach {
             Path(it).deleteIfExists()
-            println("File $it deleted")
         }
     }
 
@@ -142,29 +143,43 @@ class LoadAndGenerateComposeIcons(
     ) {
         val loadImagesPath = LoadImagesPathsUseCase(figmaRepository, figmaFileHash)
 
-        var currentCount = AtomicInteger(0)
-        val totalCount = images.size * scalesWithDirectories.size
-        scalesWithDirectories.map { scaleWithDirectory ->
-            GlobalScope.launch(Dispatchers.IO) {
-                val nodeIdWithImagePaths = loadImagesPath.execute(
-                    LoadImagesPathsUseCase.Params("png", images.map { it.nodeId }, scaleWithDirectory.key)
-                )
+        totalCount = images.size * scalesWithDirectories.size
 
-                nodeIdWithImagePaths.map { nodeWithImagePath ->
-                    launch(Dispatchers.IO) {
-                        figmaClient.downloadFile(
-                            createFileUseCase.execute(
-                                CreateFileUseCase.Params(
-                                    "${resourcesPath}/${scaleWithDirectory.value}/",
-                                    images.find { it.nodeId == nodeWithImagePath.key }!!.assetName + ".png",
-                                    isDirectory = false
-                                )
-                            ), nodeWithImagePath.value
-                        )
-                        currentCount.getAndAdd(1)
-                        println("Downloaded file ${currentCount.get()} from $totalCount total")
-                    }
-                }.joinAll()
+        scalesWithDirectories.forEach { scaleWithDirectory ->
+
+            val nodeIdWithImagePaths = loadImagesPath.execute(
+                LoadImagesPathsUseCase.Params("png", images.map { it.nodeId }, scaleWithDirectory.key)
+            )
+
+            downloadPngsInParallel(nodeIdWithImagePaths,
+                scaleWithDirectory,
+                resourcesPath,
+                images)
+        }
+    }
+
+    private suspend fun downloadPngsInParallel(
+        nodeIdWithImagePaths: Map<String, String>,
+        scaleWithDirectory: Map.Entry<String, String>,
+        resourcesPath: String,
+        images: List<ImageToDownload>
+    ) {
+        val chunks = nodeIdWithImagePaths.keys.chunked(10)
+        chunks.map { chunk ->
+            GlobalScope.launch(Dispatchers.IO) {
+                chunk.forEach { key ->
+                    figmaClient.downloadFile(
+                        createFileUseCase.execute(
+                            CreateFileUseCase.Params(
+                                "${resourcesPath}/${scaleWithDirectory.value}/",
+                                images.find { it.nodeId == key }!!.assetName + ".png",
+                                isDirectory = false
+                            )
+                        ), nodeIdWithImagePaths[key]!!
+                    )
+                    currentCount.getAndAdd(1)
+                    println("Downloaded file ${currentCount.get()} from $totalCount total")
+                }
             }
         }.joinAll()
     }
