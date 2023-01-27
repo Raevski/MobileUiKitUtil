@@ -177,7 +177,9 @@ class LoadAndGenerateComposeIcons(
                             )
                         ), nodeIdWithImagePaths[key]!!
                     )
-                    currentCount.getAndAdd(1)
+                    synchronized(this) {
+                        currentCount.getAndAdd(1)
+                    }
                     println("Downloaded file ${currentCount.get()} from $totalCount total")
                 }
             }
