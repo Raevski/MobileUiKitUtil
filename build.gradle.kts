@@ -47,6 +47,11 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+
+    implementation("io.ktor:ktor-server-netty:2.2.3")
+    implementation("io.ktor:ktor-server-html-builder:2.2.3")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("ch.qos.logback:logback-classic:1.2.11")
 }
 
 sourceSets {
