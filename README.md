@@ -15,7 +15,7 @@ Figma doesn't support exporting typography, colors and images to Xcode / Android
 For easy sync of ui kit with the code and making merge requests with uikit updaed in ci you need
 command line tool.
 
-## Features
+## Features 4444
 
 - [x] Reading config for util from dsl file and parsing it for model params
 - [x] Generating Android JetPack Compose typography class for Android Project 
